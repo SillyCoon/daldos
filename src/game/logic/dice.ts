@@ -7,7 +7,7 @@ export class Dice {
     return 1;
   }
 
-  static hasDoubleDal(...dices) {
+  static hasDoubleDal(...dices: Dice[]) {
     return !dices.some((dice) => dice !== this.dal);
   }
 }

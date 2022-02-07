@@ -1,4 +1,4 @@
-import { DicePresentation } from './draw/dice-presentation.js';
+import { DicePresentation } from './draw/dice-presentation';
 
 
 export class CanvasDrawer {

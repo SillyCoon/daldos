@@ -1,17 +1,17 @@
-import { GameState } from './game-state.js';
-import { CanvasDrawer } from './drawer.js';
-import { ColorScheme } from '../models/draw/color-scheme.js';
-import { Size } from '../models/draw/size.js';
-import { RollCommand } from './commands/roll-command.js';
-import { OppositeRollCommand } from './commands/opposite-roll-command.js';
-import { ActivateCommand } from './commands/activate-command.js';
-import { PickCommand } from './commands/pick-command.js';
-import { MoveCommand } from './commands/move-command.js';
-import { GameMode } from '../models/game-elements/enums/game-mode.js';
-import { Button } from './control/button.js/index.js.js.js.js';
-import { InteractiveBoard } from './control/Interactive-board.js';
-import { Container } from './control/container.js';
-import { LogPane } from './control/log-pane.js';
+import { GameState } from './game-state';
+import { CanvasDrawer } from './drawer';
+import { ColorScheme } from '../models/draw/color-scheme';
+import { Size } from '../models/draw/size';
+import { RollCommand } from './commands/roll-command';
+import { OppositeRollCommand } from './commands/opposite-roll-command';
+import { ActivateCommand } from './commands/activate-command';
+import { PickCommand } from './commands/pick-command';
+import { MoveCommand } from './commands/move-command';
+import { GameMode } from '../models/game-elements/enums/game-mode';
+import { Button } from './control/button';
+import { InteractiveBoard } from './control/Interactive-board';
+import { Container } from './control/container';
+import { LogPane } from './control/log-pane';
 import { takeWhile } from 'rxjs/operators';
 
 export class App {

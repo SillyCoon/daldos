@@ -1,7 +1,9 @@
-import { Notation } from './enums/notation.js';
+import { NotationEnum } from './enums/notation';
 
 export class FieldSnapshot {
-  constructor(fieldNotation) {
+  value: string;
+
+  constructor(fieldNotation: string) {
     this.value = fieldNotation;
   }
 
@@ -10,6 +12,6 @@ export class FieldSnapshot {
   }
 
   get splittedByColumns() {
-    return this.value.split(Notation.Delimiter);
+    return this.value.split(NotationEnum.Delimiter);
   }
 }

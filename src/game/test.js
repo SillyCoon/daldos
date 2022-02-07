@@ -1,12 +1,12 @@
 import { App } from '. /logic/app';
-import { GameMode } from './models/game-elements/enums/game-mode.js';
+import { GameMode } from './models/game-elements/enums/game-mode';
 import { take } from 'rxjs/operators';
 
 // eslint-disable-next-line no-unused-vars
 import css from './styles/style.css';
 
 import { Container } from './logic/control/container';
-import { Button } from './logic/control/button.js';
+import { Button } from './logic/control/button';
 import { SocketMultiplayer } from './logic/opponent/multiplayer';
 import { PrimitiveAI } from './logic/opponent/primitive-AI';
 

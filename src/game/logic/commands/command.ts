@@ -1,4 +1,10 @@
-export class Command {
+import { Coordinate } from '../../models/game-elements/coordinate';
+import { App } from '../app';
+import { GameState } from '../game-state';
+
+export abstract class Command {
+  public skippedDices: any[] = [];
+
   get executerColor() {
     return this.gameState.currentPlayerColor;
   }
@@ -7,14 +13,18 @@ export class Command {
     return this.executerColor === this.app.myColor;
   }
 
-  constructor(app, gameState, actionCoordinate) {
+  protected gameState: GameState;
+  protected app: App;
+  protected actionCoordinate: Coordinate | null;
+
+  constructor(app: App, gameState: GameState, actionCoordinate: Coordinate | null) {
     this.app = app;
     this.gameState = gameState;
     this.actionCoordinate = actionCoordinate;
   }
 
-  execute() {
-    const nextState = this._runCommand();
+  execute(): Promise<Boolean> {
+    const nextState = this.runCommand();
 
     if (!nextState || nextState.equals(this.gameState)) {
       return Promise.resolve(false);
@@ -22,10 +32,6 @@ export class Command {
 
     this.app.currentState = nextState;
     this.app.draw(nextState);
-
-    if (this.app.httpLogger) {
-      this.app.httpLogger.logCommand(this);
-    }
 
     return new Promise((resolve) => {
       if (nextState.hasAnyMove) {
@@ -43,12 +49,10 @@ export class Command {
     });
   }
 
-  _runCommand() {
-    return null; // implemented in siblings
-  }
-
   undo() {
     this.app.currentState = this.gameState;
     this.app.draw(this.gameState);
   }
+
+  abstract runCommand(): GameState;
 }

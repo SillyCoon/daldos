@@ -8,3 +8,12 @@ export const Notation = Object.freeze(
     'Delimiter': '\n',
   },
 );
+
+export const enum NotationEnum {
+  Empty = '*',
+  FirstPassive = '-',
+  FirstActive = '+',
+  SecondPassive = '0',
+  SecondActive = '1',
+  Delimiter = '\n',
+}

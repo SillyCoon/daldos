@@ -1,7 +1,7 @@
-import { Square } from '../models/game-elements/square.js';
-import { NotationConverter } from './notation-converter.js';
-import { FieldException } from '../models/game-elements/exceptions/field-exception.js';
-import { FieldSnapshot } from '../models/game-elements/field-snapshot.js';
+import { Square } from '../models/game-elements/square';
+import { NotationConverter } from './notation-converter';
+import { FieldException } from '../models/game-elements/exceptions/field-exception';
+import { FieldSnapshot } from '../models/game-elements/field-snapshot';
 
 export class Field {
   get middleRowLength() {

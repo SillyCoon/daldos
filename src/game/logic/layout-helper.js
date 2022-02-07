@@ -5,7 +5,7 @@ export class LayoutHelper {
     btn.textContent = name;
     btn.disabled = disabled;
     if (clickHandler) {
-      addHandlerTo(btn, 'click', clickHandler);
+      LayoutHelper.addHandlerTo(btn, 'click', clickHandler);
     }
     return btn;
   }

@@ -1,4 +1,4 @@
-import { Size } from '../models/draw/size.js';
+import { Size } from '../models/draw/size';
 
 export class CoordinateTranslator {
   static translateMousePositionToGameCoordinates(mousePosition) {

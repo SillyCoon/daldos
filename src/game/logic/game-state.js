@@ -1,7 +1,7 @@
-import { Field } from './field.js';
-import { Dice } from './dice.js';
-import { CommandType } from '../models/game-elements/enums/command-type.js';
-import { GameStatus } from '../models/game-elements/enums/game-status.js';
+import { Field } from './field';
+import { Dice } from './dice';
+import { CommandType } from '../models/game-elements/enums/command-type';
+import { GameStatus } from '../models/game-elements/enums/game-status';
 
 export class GameState {
   constructor(field, { dices, color, selectedFigure }, status) {
@@ -76,24 +76,24 @@ export class GameState {
   command(type, params) {
     let nextState;
     switch (type) {
-    case CommandType.Move:
-      if (params.from) {
-        this.selectedFigure = this.field.pickFigure(params.from);
-      }
-      nextState = this.selectedFigure ? this.makeMove(this.selectedFigure.coordinate, params.to) : this;
-      break;
-    case CommandType.Activate:
-      nextState = this.activate(params.figureCoordinate);
-      break;
-    case CommandType.PickFigure:
-      nextState = this.pickFigure(params.figureCoordinate);
-      break;
-    case CommandType.Roll:
-      // TODO: серьезно подумать над разделением интерфейсов
-      nextState = this.roll(params ? params.dices : null);
-      break;
-    default:
-      throw new Error('No such command!');
+      case CommandType.Move:
+        if (params.from) {
+          this.selectedFigure = this.field.pickFigure(params.from);
+        }
+        nextState = this.selectedFigure ? this.makeMove(this.selectedFigure.coordinate, params.to) : this;
+        break;
+      case CommandType.Activate:
+        nextState = this.activate(params.figureCoordinate);
+        break;
+      case CommandType.PickFigure:
+        nextState = this.pickFigure(params.figureCoordinate);
+        break;
+      case CommandType.Roll:
+        // TODO: серьезно подумать над разделением интерфейсов
+        nextState = this.roll(params ? params.dices : null);
+        break;
+      default:
+        throw new Error('No such command!');
     }
 
     return nextState;
@@ -166,10 +166,10 @@ export class GameState {
 
       return new GameState(
         movedField, {
-          color: nextPlayerColor,
-          dices: remainingDices,
-          selectedFigure: null,
-        }, status);
+        color: nextPlayerColor,
+        dices: remainingDices,
+        selectedFigure: null,
+      }, status);
     }
 
     return this;

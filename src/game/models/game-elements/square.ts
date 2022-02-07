@@ -1,4 +1,12 @@
+import { Coordinate } from './coordinate';
+import { Figure } from './figure';
+
 export class Square {
+
+  figure: Figure | null;
+  highlighted: boolean;
+  coordinate: Coordinate;
+
   get hasFigure() {
     return !!this.figure;
   }
@@ -7,7 +15,7 @@ export class Square {
     return this.highlighted;
   }
 
-  constructor(coordinate, figure, highlighted = false) {
+  constructor(coordinate: Coordinate, figure: Figure, highlighted = false) {
     this.coordinate = coordinate;
     this.figure = figure;
     this.highlighted = highlighted;

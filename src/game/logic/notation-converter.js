@@ -1,5 +1,5 @@
-import { Figure } from '../models/game-elements/figure.js';
-import { Notation } from '../models/game-elements/enums/notation.js';
+import { Figure } from '../models/game-elements/figure';
+import { Notation } from '../models/game-elements/enums/notation';
 
 export class NotationConverter {
   static toNotation(field) {

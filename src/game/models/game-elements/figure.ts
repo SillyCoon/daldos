@@ -1,5 +1,11 @@
+import { Color } from './color';
+
 export class Figure {
-  constructor(color) {
+  color: Color;
+  isActive: Boolean;
+  canMove: Boolean;
+
+  constructor(color: Color) {
     this.color = color;
     this.isActive = false;
     this.canMove = false;
@@ -17,7 +23,7 @@ export class Figure {
     return this.color === 1;
   }
 
-  canActivatedBy(player) {
+  canActivatedBy(player: Color) {
     return !this.active && this.color === player;
   }
 }

@@ -1,11 +1,14 @@
 export class Coordinate {
-  constructor(stringWithDelimiter) {
+  x: number;
+  y: number;
+
+  constructor(stringWithDelimiter: string) {
     const [x, y] = stringWithDelimiter.replace(' ', '').split(';');
     this.x = +x;
     this.y = +y;
   }
 
-  set(x, y) {
+  set(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
@@ -14,7 +17,7 @@ export class Coordinate {
     return `x: ${this.x}, y: ${this.y}`;
   }
 
-  equals(coordinate) {
+  equals(coordinate: Coordinate) {
     return this.toString() === coordinate.toString();
   }
 }
