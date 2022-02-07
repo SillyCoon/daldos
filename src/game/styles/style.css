@@ -1,0 +1,40 @@
+.game-container {
+    display: inline-flex;
+    width: 100%;
+}
+
+.start-container {
+    width: 600px;
+    height: 250px;
+    margin-left: 30%;
+    border: solid 2px black;
+}
+
+#dal-field {
+    height: 800px;
+    width: 600px;
+    border: solid 1px black;
+    margin-right: 10px;
+    margin-left: 30%;
+}
+
+#dal-canvas {
+    margin: 10px;
+}
+
+.dal-controls-container {
+    margin-top: 10px;
+    margin-right: 100px;
+    width: 100%;
+}
+
+.disabled-field {
+    cursor: not-allowed;
+    pointer-events: none
+}
+
+body, html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
