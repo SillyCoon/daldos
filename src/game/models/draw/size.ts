@@ -1,7 +1,12 @@
 export class Size {
-  constructor(height = 800, width = 600) {
+  height: number;
+  width: number;
+  fieldSize: number;
+
+  constructor(height = 800, width = 600, fieldSize = 16) {
     this.height = height;
     this.width = width;
+    this.fieldSize = fieldSize;
   }
 
   get square() {

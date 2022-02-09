@@ -2,15 +2,18 @@ import { BaseControl } from './base-control';
 import { fromEvent } from 'rxjs';
 
 interface ButtonConfig {
-  name: string,
-  disabled: boolean;
-};
+  name: string;
+  disabled?: boolean;
+}
 
 export class Button implements BaseControl {
-
   nativeElement: HTMLButtonElement;
 
-  constructor({ name, disabled = false }: ButtonConfig, _className = null, _handler = null) {
+  constructor(
+    { name, disabled = false }: ButtonConfig,
+    _className = null,
+    _handler = null,
+  ) {
     const nativeButton = document.createElement('button');
     nativeButton.id = `btn-${name}`;
     nativeButton.textContent = name;

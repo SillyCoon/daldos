@@ -13,11 +13,15 @@ export abstract class Command {
     return this.executerColor === this.app.myColor;
   }
 
-  protected gameState: GameState;
+  public gameState: GameState;
   protected app: App;
   protected actionCoordinate: Coordinate | null;
 
-  constructor(app: App, gameState: GameState, actionCoordinate: Coordinate | null) {
+  constructor(
+    app: App,
+    gameState: GameState,
+    actionCoordinate: Coordinate | null,
+  ) {
     this.app = app;
     this.gameState = gameState;
     this.actionCoordinate = actionCoordinate;
@@ -37,7 +41,9 @@ export abstract class Command {
       if (nextState.hasAnyMove) {
         resolve(true);
       } else {
-        this.app.log(`Нет доступных ходов для игрока ${nextState.currentPlayerColor}`);
+        this.app.log(
+          `Нет доступных ходов для игрока ${nextState.currentPlayerColor}`,
+        );
         setTimeout(() => {
           const skippedState = nextState.skipMove();
           this.skippedDices = nextState.dices;

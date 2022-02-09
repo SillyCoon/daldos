@@ -7,14 +7,30 @@ import { OppositeRollCommand } from './commands/opposite-roll-command';
 import { ActivateCommand } from './commands/activate-command';
 import { PickCommand } from './commands/pick-command';
 import { MoveCommand } from './commands/move-command';
-import { GameMode } from '../models/game-elements/enums/game-mode';
+import { GameModeEnum } from '../models/game-elements/enums/game-mode';
 import { Button } from './control/button';
 import { InteractiveBoard } from './control/Interactive-board';
 import { Container } from './control/container';
 import { LogPane } from './control/log-pane';
 import { takeWhile } from 'rxjs/operators';
+import { Command } from './commands/command';
+import { Opponent } from './opponent/opponent';
+import { Coordinate } from '../models/game-elements/coordinate';
 
 export class App {
+  myName: string;
+  // TODO: вычислить тип
+  opponent: Opponent;
+  currentState: GameState;
+  size: Size;
+  colorScheme: ColorScheme;
+  commands: Command[];
+  mode: GameModeEnum;
+  board: InteractiveBoard = new InteractiveBoard(new Size());
+  controlsButtons: Button[] = [];
+  logger: LogPane = new LogPane();
+  drawer: CanvasDrawer;
+
   get firstPlayerName() {
     return this.myColor === 1 ? this.myName : this.opponent.name;
   }
@@ -40,58 +56,63 @@ export class App {
     return this.currentState && !this.currentState.hasWinCondition;
   }
 
-  constructor(container, myName, { mode = GameMode.Single }, opponent, logger) {
-    if (logger) {
-      this.httpLogger = logger;
-    }
-
+  constructor(
+    container: Container,
+    myName: string,
+    { mode = GameModeEnum.Single },
+    opponent: Opponent,
+  ) {
     this.colorScheme = new ColorScheme();
     this.size = new Size();
-    this.size.fieldSize = 16;
     this.commands = [];
 
     this.myName = myName;
     this.mode = mode;
     this.opponent = opponent;
+    this.currentState = GameState.start(this.size.fieldSize);
 
-    this._initBoard(container, this.size);
-    this._initControlsButtons(container);
-    this._initLogger(container);
-    this._initDrawer();
+    this.initBoard(container, this.size);
+    this.initControlsButtons(container);
+    this.initLogger(container);
+    this.drawer = new CanvasDrawer(this.board, this.colorScheme, this.size);
   }
 
   start() {
     this.currentState = GameState.start(this.size.fieldSize);
-    this._toggleControlsAvailability();
+    this.toggleControlsAvailability();
     this.draw(this.currentState);
     if (!this.isMyTurn) {
-      this.opponent.getCommandFor(this).then(command => this.executeCommand(command));
+      this.opponent
+        .getCommandFor(this)
+        .then((command) => this.executeCommand(command));
     }
   }
 
-  _initBoard(container, size) {
+  private initBoard(container: Container, size: Size) {
     this.board = new InteractiveBoard(size);
-    this._assignBoardHandlers();
+    this.assignBoardHandlers();
     container.appendElement(this.board);
   }
 
-  _initControlsButtons(container) {
+  private initControlsButtons(container: Container) {
     const btnRoll = new Button({ name: 'Roll' });
     const btnUndo = new Button({ name: 'Undo' });
     const controlsContainer = makeControlsLayout(container);
 
     this.controlsButtons = [btnRoll, btnUndo];
 
-    btnRoll.handleClick()
+    btnRoll
+      .handleClick()
       .pipe(takeWhile(() => this.gameExists))
       .subscribe(() => this.rollDices());
-    btnUndo.handleClick()
+    btnUndo
+      .handleClick()
       .pipe(takeWhile(() => this.gameExists))
       .subscribe(() => this.undo());
 
     controlsContainer.append(btnRoll, btnUndo);
 
-    function makeControlsLayout(container) {
+    function makeControlsLayout(container: Container) {
       const controlsContainer = new Container('dal-controls-container');
       const controls = new Container('dal-controls');
 
@@ -101,25 +122,34 @@ export class App {
     }
   }
 
-  _initLogger(container) {
+  private initLogger(container: Container) {
     const logger = new LogPane();
     container.appendElement(logger);
     this.logger = logger;
   }
 
-  _assignBoardHandlers() {
-    this.board.handleLeftClick()
+  private assignBoardHandlers() {
+    this.board
+      .handleLeftClick()
       .pipe(takeWhile(() => this.gameExists))
-      .subscribe(actionCoordinate => this.pickFigure(actionCoordinate));
-    this.board.handleRightClick()
+      .subscribe((actionCoordinate) =>
+        actionCoordinate ? this.pickFigure(actionCoordinate) : null,
+      );
+    this.board
+      .handleRightClick()
       .pipe(takeWhile(() => this.gameExists))
-      .subscribe(actionCoordinate => this.move(actionCoordinate));
-    this.board.handleDoubleClick()
+      .subscribe((actionCoordinate) =>
+        actionCoordinate ? this.move(actionCoordinate) : null,
+      );
+    this.board
+      .handleDoubleClick()
       .pipe(takeWhile(() => this.gameExists))
-      .subscribe(actionCoordinate => this.activate(actionCoordinate));
+      .subscribe((actionCoordinate) =>
+        actionCoordinate ? this.activate(actionCoordinate) : null,
+      );
   }
 
-  _toggleControlsAvailability() {
+  private toggleControlsAvailability() {
     if (!this.opponent) return;
     if (this.isMyTurn) {
       enableControlsButtons(this.controlsButtons);
@@ -129,41 +159,53 @@ export class App {
       this.board.disable();
     }
 
-    function disableControlsButtons(buttons) {
-      buttons.forEach(button => button.disable());
+    function disableControlsButtons(buttons: Button[]) {
+      buttons.forEach((button) => button.disable());
     }
 
-    function enableControlsButtons(buttons) {
-      buttons.forEach(button => button.enable());
+    function enableControlsButtons(buttons: Button[]) {
+      buttons.forEach((button) => button.enable());
     }
   }
 
-  rollDices() {
+  rollDices(): Promise<void> {
     return this.executeCommand(new RollCommand(this, this.currentState, null));
   }
 
-  oppositePlayerRollDices(dices) {
-    return this.executeCommand(new OppositeRollCommand(this, this.currentState, dices));
+  oppositePlayerRollDices(dices: number[]): Promise<void> {
+    return this.executeCommand(
+      new OppositeRollCommand(this, this.currentState, dices),
+    );
   }
 
-  pickFigure(figureCoordinate) {
+  pickFigure(figureCoordinate: Coordinate): Promise<void> {
     console.log('pick');
-    return this.executeCommand(new PickCommand(this, this.currentState, figureCoordinate));
+    return this.executeCommand(
+      new PickCommand(this, this.currentState, figureCoordinate),
+    );
   }
 
-  activate(figureCoordinate) {
-    return this.executeCommand(new ActivateCommand(this, this.currentState, figureCoordinate));
+  activate(figureCoordinate: Coordinate): Promise<void> {
+    return this.executeCommand(
+      new ActivateCommand(this, this.currentState, figureCoordinate),
+    );
   }
 
-  move(to) {
-    return this.executeCommand(new MoveCommand(this, this.currentState, { to })).then(() => {
-      if (this.currentState.hasWinCondition) {
-        this.showVictoryScreen();
-      }
-    });
+  move(to: Coordinate): Promise<void> {
+    const from = this.currentState.selectedFigure?.coordinate;
+
+    if (from)
+      return this.executeCommand(
+        new MoveCommand(this, this.currentState, { from, to }),
+      ).then(() => {
+        if (this.currentState.hasWinCondition) {
+          this.showVictoryScreen();
+        }
+      });
+    else return Promise.resolve();
   }
 
-  undo() {
+  undo(): Promise<void> {
     const lastCommand = this.commands.pop();
     if (lastCommand) {
       lastCommand.undo();
@@ -173,11 +215,14 @@ export class App {
     });
   }
 
-  executeCommand(command) {
+  executeCommand(command: Command): Promise<void> {
     return command.execute().then((stateHasMove) => {
-      this._toggleControlsAvailability();
+      this.toggleControlsAvailability();
       if (stateHasMove) {
-        if (!(command instanceof RollCommand) && !(command instanceof PickCommand)) {
+        if (
+          !(command instanceof RollCommand) &&
+          !(command instanceof PickCommand)
+        ) {
           this.commands.push(command);
         }
       }
@@ -187,41 +232,43 @@ export class App {
     });
   }
 
-  handleOpponentCommand(command) {
+  handleOpponentCommand(command: Command): void {
     if (command.executedByMe) {
       this.opponent.send(command).then(() => {
         if (!this.isMyTurn) {
-          this.opponent.getCommandFor(this).then(command => {
+          this.opponent.getCommandFor(this).then((command) => {
             this.executeCommand(command);
           });
         }
       });
     } else if (!this.isMyTurn) {
-      this.opponent.getCommandFor(this).then(command => {
+      this.opponent.getCommandFor(this).then((command) => {
         this.executeCommand(command);
       });
     }
   }
 
-  _initDrawer() {
-    this.drawer = new CanvasDrawer(this.board, this.colorScheme, this.size);
+  playerStatistics(gameState: GameState): { name: string } {
+    return {
+      name:
+        gameState.currentPlayerColor === 1
+          ? this.firstPlayerName
+          : this.secondPlayerName,
+    };
   }
 
-  playerStatistics(gameState) {
-    return ({
-      name: gameState.currentPlayerColor === 1 ? this.firstPlayerName : this.secondPlayerName,
-    });
-  }
-
-  draw(state) {
+  draw(state: GameState) {
     this.drawer.draw(state, this.playerStatistics(state));
   }
 
-  log(message) {
+  log(message: any) {
     this.logger.log(message);
   }
 
   showVictoryScreen() {
-    this.drawer.drawVictory(this.currentState, this.playerStatistics(this.currentState));
+    this.drawer.drawVictory(
+      this.currentState,
+      this.playerStatistics(this.currentState),
+    );
   }
 }

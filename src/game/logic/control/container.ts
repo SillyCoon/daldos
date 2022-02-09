@@ -18,16 +18,18 @@ export class Container implements BaseControl {
     }
   }
 
-  append(...elements: HTMLElement[]) {
-    const nativeElements = elements.map(element => this.extractNativeFrom(element));
+  append(...elements: HTMLElement[] | BaseControl[]) {
+    const nativeElements = elements.map((element) =>
+      this.extractNativeFrom(element),
+    );
     this.nativeElement.append(...nativeElements);
   }
 
-  appendElement(element: HTMLElement) {
+  appendElement(element: HTMLElement | BaseControl) {
     this.nativeElement.appendChild(this.extractNativeFrom(element));
   }
 
-  prepend(element: HTMLElement) {
+  prepend(element: HTMLElement | BaseControl) {
     this.nativeElement.prepend(this.extractNativeFrom(element));
   }
 

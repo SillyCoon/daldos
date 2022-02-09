@@ -20,4 +20,8 @@ export class Coordinate {
   equals(coordinate: Coordinate) {
     return this.toString() === coordinate.toString();
   }
+
+  static fromXY(x: number, y: number): Coordinate {
+    return new Coordinate(`${x};${y}`);
+  }
 }

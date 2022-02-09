@@ -2,7 +2,6 @@ import { Coordinate } from './coordinate';
 import { Figure } from './figure';
 
 export class Square {
-
   figure: Figure | null;
   highlighted: boolean;
   coordinate: Coordinate;
@@ -15,7 +14,11 @@ export class Square {
     return this.highlighted;
   }
 
-  constructor(coordinate: Coordinate, figure: Figure, highlighted = false) {
+  constructor(
+    coordinate: Coordinate,
+    figure: Figure | null,
+    highlighted = false,
+  ) {
     this.coordinate = coordinate;
     this.figure = figure;
     this.highlighted = highlighted;
