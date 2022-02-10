@@ -16,6 +16,7 @@ import { takeWhile } from 'rxjs/operators';
 import { Command } from './commands/command';
 import { Opponent } from './opponent/opponent';
 import { Coordinate } from '../models/game-elements/coordinate';
+import { Statistic } from '../models/game-elements/statistic';
 
 export class App {
   myName: string;
@@ -248,12 +249,13 @@ export class App {
     }
   }
 
-  playerStatistics(gameState: GameState): { name: string } {
+  playerStatistics(gameState: GameState): Statistic {
     return {
       name:
         gameState.currentPlayerColor === 1
           ? this.firstPlayerName
           : this.secondPlayerName,
+      win: false,
     };
   }
 
