@@ -4,13 +4,14 @@ import { CoordinateTranslator } from '../coordinate-translator';
 import { fromEvent, Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Coordinate } from '../../models/game-elements/coordinate';
+import { Size } from '../../models/draw/size';
 
 export class InteractiveBoard implements BaseControl {
   nativeElement: HTMLElement;
   canvas: HTMLCanvasElement;
   fieldSize: number;
 
-  constructor(size: { width: number; height: number; fieldSize: number }) {
+  constructor(size: Size) {
     const boardContainer = new Container('', 'dal-field');
     const canvas = document.createElement('canvas');
     canvas.id = 'dal-canvas';

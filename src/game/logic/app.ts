@@ -20,7 +20,6 @@ import { Statistic } from '../models/game-elements/statistic';
 
 export class App {
   myName: string;
-  // TODO: вычислить тип
   opponent: Opponent;
   currentState: GameState;
   size: Size;

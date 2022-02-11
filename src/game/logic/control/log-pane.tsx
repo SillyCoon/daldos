@@ -16,18 +16,3 @@ export class LogPane extends Container {
     this.appendElement(logItem);
   }
 }
-
-interface LogPaneProps {
-  events: any[];
-}
-
-export const LogPaneComponent = ({ events }: LogPaneProps) => {
-  const logs = events.map((e) => <p>{e.toString()}</p>);
-
-  return (
-    <div>
-      <h3>Лог:</h3>
-      {logs}
-    </div>
-  );
-};

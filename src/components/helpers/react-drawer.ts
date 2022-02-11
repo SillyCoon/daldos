@@ -1,24 +1,28 @@
-import { ColorScheme } from '../models/draw/color-scheme';
-import { Size } from '../models/draw/size';
-import { Figure } from '../models/game-elements/figure';
-import { Statistic } from '../models/game-elements/statistic';
-import { InteractiveBoard } from './control/Interactive-board';
-import { dicePresentation, DicePresentation } from './draw/dice-presentation';
-import { GameState } from './game-state';
+import {
+  DicePresentation,
+  dicePresentation,
+} from '../../game/logic/draw/dice-presentation';
+import { GameState } from '../../game/logic/game-state';
+import { ColorScheme } from '../../game/models/draw/color-scheme';
+import { Size } from '../../game/models/draw/size';
+import { Figure } from '../../game/models/game-elements/figure';
+import { Statistic } from '../../game/models/game-elements/statistic';
 
-export class CanvasDrawer {
-  board: InteractiveBoard = new InteractiveBoard(new Size(10, 19, 10));
+export class ReactDrawer {
   colorScheme: ColorScheme;
   size: Size = new Size();
-  canvas: HTMLCanvasElement;
   dice: DicePresentation;
   squareSize: number;
   fontSize: number;
   numerationPadding: number;
   context: CanvasRenderingContext2D;
 
-  constructor(board: InteractiveBoard, colorScheme: ColorScheme, size: Size) {
-    this.canvas = board.canvas;
+  constructor(
+    context: CanvasRenderingContext2D,
+    colorScheme: ColorScheme,
+    size: Size,
+  ) {
+    this.context = context;
 
     this.dice = dicePresentation;
     this.dice.init();
@@ -28,15 +32,9 @@ export class CanvasDrawer {
     this.numerationPadding = size.numerationPadding;
     this.colorScheme = colorScheme;
 
-    const maybeContext = this.canvas.getContext('2d');
-    if (maybeContext) {
-      this.context = maybeContext;
-      this.context.font = `${this.fontSize}px serif`;
-      this.context.textAlign = 'center';
-      this.context.textBaseline = 'middle';
-    } else {
-      throw new Error('Not canvas!');
-    }
+    this.context.font = `${this.fontSize}px serif`;
+    this.context.textAlign = 'center';
+    this.context.textBaseline = 'middle';
   }
 
   draw(state: GameState, playerStatistic: Statistic) {
@@ -76,7 +74,7 @@ export class CanvasDrawer {
   }
 
   clear() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.clearRect(0, 0, this.size.width, this.size.height);
   }
 
   private drawCurrentPlayerStatistics(player: Statistic) {
