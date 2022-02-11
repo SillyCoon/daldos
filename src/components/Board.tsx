@@ -4,15 +4,17 @@ import { Canvas } from './Canvas';
 import { ColorScheme } from '../game/models/draw/color-scheme';
 import { GameState } from '../game/logic/game-state';
 import { Statistic } from '../game/models/game-elements/statistic';
+import { Coordinate } from '../game/models/game-elements/coordinate';
+import { BoardEventType, MouseClickType, mouseToGame } from './model/clickType';
 
 interface BoardProps {
   size: Size;
   disabled: boolean;
   gameState: GameState;
   statistic: Statistic;
+  onPickFigure: (figureCoordinate: Coordinate) => void;
+  onMoveFigure: (to: Coordinate) => void;
 }
-
-const handleBoardClick = () => void 0;
 
 const BoardWrapper = styled.div`
   ${(props: { disabled?: boolean }) =>
@@ -22,8 +24,41 @@ const BoardWrapper = styled.div`
     `}
 `;
 
-export const Board = ({ size, disabled, gameState, statistic }: BoardProps) => {
+export const Board = ({
+  size,
+  disabled,
+  gameState,
+  statistic,
+  onPickFigure,
+  onMoveFigure,
+}: BoardProps) => {
   const colorScheme = new ColorScheme();
+
+  const handleBoardClick = (
+    boardCoordinate: Coordinate,
+    clickType: MouseClickType,
+  ) => {
+    const actionType = mouseToGame(clickType);
+
+    if (actionType === BoardEventType.Pick && canPick(boardCoordinate)) {
+      console.log('pick: ', boardCoordinate);
+      onPickFigure(boardCoordinate);
+    } else if (actionType === BoardEventType.Move && canMove(boardCoordinate)) {
+      console.log('move: ', boardCoordinate);
+      onMoveFigure(boardCoordinate);
+    } else {
+      console.log('no moves for this coordinate: ', boardCoordinate);
+    }
+  };
+
+  const canPick = (coordinate: Coordinate) => {
+    return gameState.canPick(coordinate);
+  };
+
+  const canMove = (coordinate: Coordinate) => {
+    return gameState.isSquareAvailableToMove(coordinate);
+  };
+
   return (
     <BoardWrapper disabled={disabled}>
       <Canvas
@@ -61,4 +96,7 @@ class InteractiveBoardTemplate {
   //     filter((event) => !!this.getActionCoordinate(event)),
   //   );
   // }
+}
+function fromMouseToGame(clickType: MouseClickType) {
+  throw new Error('Function not implemented.');
 }

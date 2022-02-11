@@ -2,17 +2,19 @@ import { Ref, useEffect, useRef, useState } from 'react';
 import { GameState } from '../game/logic/game-state';
 import { ColorScheme } from '../game/models/draw/color-scheme';
 import { Size } from '../game/models/draw/size';
+import { Coordinate } from '../game/models/game-elements/coordinate';
 import { Statistic } from '../game/models/game-elements/statistic';
 import { CanvasCoordinateTranslator } from './helpers/canvasCoordinateTranslator';
 import { ReactDrawer } from './helpers/react-drawer';
 import { CanvasClickEvent } from './model/canvasClickEvent';
+import { fromEventToType, MouseClickType } from './model/clickType';
 
 export interface CanvasProps {
   size: Size;
   colorScheme: ColorScheme;
   gameState: GameState;
   statistic: Statistic;
-  onClick: () => void;
+  onClick: (boardCoordinate: Coordinate, clickType: MouseClickType) => void;
 }
 
 export const Canvas = ({
@@ -52,8 +54,7 @@ export const Canvas = ({
           rect,
         );
       if (clickCoord) {
-        console.log(clickCoord);
-        onClick();
+        onClick(clickCoord, fromEventToType(e.button));
       } else {
         console.log('click outside the field');
       }

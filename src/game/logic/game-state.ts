@@ -184,6 +184,16 @@ export class GameState {
     }
   }
 
+  canPick(coordinate: Coordinate): boolean {
+    const figuresCanPick = this.field.getAllFiguresCanActivate(
+      this.currentPlayerColor,
+    );
+    return (
+      !!figuresCanPick.find((figure) => figure.coordinate.equals(coordinate)) &&
+      this.hasDal()
+    );
+  }
+
   pickFigure(figureCoordinate: Coordinate): GameState {
     const selectedFigure = this.field.pickFigure(figureCoordinate);
     if (!selectedFigure || !selectedFigure.active) return this;

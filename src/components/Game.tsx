@@ -13,6 +13,8 @@ import { GameState } from '../game/logic/game-state';
 import { Command } from '../game/logic/commands/command';
 import { Color } from '../game/models/game-elements/color';
 import styled from 'styled-components';
+import { CommandTypeEnum } from '../game/models/game-elements/enums/command-type';
+import { Coordinate } from '../game/models/game-elements/coordinate';
 
 const colorScheme = new ColorScheme();
 const size = new Size();
@@ -53,7 +55,13 @@ export const Game = (props: DaldozaProps) => {
     draw(gameState);
   });
 
-  const handleRoll = () => {};
+  const handleRoll = () => {
+    setGameState(gameState.command(CommandTypeEnum.Roll));
+  };
+
+  const handlePickFigure = (coordinate: Coordinate) => {};
+
+  const handleMoveFigure = (to: Coordinate) => {};
 
   return (
     <GameWrapper>
@@ -62,6 +70,8 @@ export const Game = (props: DaldozaProps) => {
         disabled={!isMyTurn}
         statistic={playerStatistics(gameState)}
         gameState={gameState}
+        onPickFigure={handlePickFigure}
+        onMoveFigure={handleMoveFigure}
       ></Board>
       <Controls onRoll={() => handleRoll()}></Controls>
       <Logger events={events}></Logger>
