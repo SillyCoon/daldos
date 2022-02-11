@@ -14,6 +14,7 @@ interface BoardProps {
   statistic: Statistic;
   onPickFigure: (figureCoordinate: Coordinate) => void;
   onMoveFigure: (to: Coordinate) => void;
+  onActivateFigure: (figureCoordinate: Coordinate) => void;
 }
 
 const BoardWrapper = styled.div`
@@ -31,6 +32,7 @@ export const Board = ({
   statistic,
   onPickFigure,
   onMoveFigure,
+  onActivateFigure,
 }: BoardProps) => {
   const colorScheme = new ColorScheme();
 
@@ -46,6 +48,12 @@ export const Board = ({
     } else if (actionType === BoardEventType.Move && canMove(boardCoordinate)) {
       console.log('move: ', boardCoordinate);
       onMoveFigure(boardCoordinate);
+    } else if (
+      actionType === BoardEventType.Activate &&
+      canActivate(boardCoordinate)
+    ) {
+      onActivateFigure(boardCoordinate);
+      console.log('activate: ', boardCoordinate);
     } else {
       console.log('no moves for this coordinate: ', boardCoordinate);
     }
@@ -57,6 +65,10 @@ export const Board = ({
 
   const canMove = (coordinate: Coordinate) => {
     return gameState.isSquareAvailableToMove(coordinate);
+  };
+
+  const canActivate = (coordinate: Coordinate) => {
+    return gameState.canActivate(coordinate);
   };
 
   return (

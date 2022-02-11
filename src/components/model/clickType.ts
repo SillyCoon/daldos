@@ -20,6 +20,7 @@ export const fromEventToType = (event: number) => {
 
 export const enum BoardEventType {
   'Pick',
+  'Activate',
   'Move',
   'Undefined',
 }
@@ -30,6 +31,8 @@ export const mouseToGame = (mouseClick: MouseClickType) => {
       return BoardEventType.Pick;
     case MouseClickType.Right:
       return BoardEventType.Move;
+    case MouseClickType.Double:
+      return BoardEventType.Activate;
     default:
       return BoardEventType.Undefined;
   }

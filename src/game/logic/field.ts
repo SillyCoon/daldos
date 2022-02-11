@@ -33,7 +33,7 @@ export class Field {
     const changingField = this.clone();
     const activatingFigure = changingField.pickFigure(figureCoordinate);
 
-    if (activatingFigure && activatingFigure.canActivatedBy(currentColor)) {
+    if (activatingFigure?.canActivatedBy(currentColor)) {
       activatingFigure.activate();
       return changingField;
     }

@@ -158,6 +158,11 @@ export class GameState {
     }
   }
 
+  canActivate(coordinate: Coordinate): boolean {
+    const maybeFigure = this.field.pickFigure(coordinate);
+    return !!maybeFigure?.canActivatedBy(this.currentPlayerColor);
+  }
+
   activate(figureCoordinate: Coordinate): GameState {
     if (this.hasDal()) {
       const changedField = this.field.activate(
@@ -188,9 +193,8 @@ export class GameState {
     const figuresCanPick = this.field.getAllFiguresCanActivate(
       this.currentPlayerColor,
     );
-    return (
-      !!figuresCanPick.find((figure) => figure.coordinate.equals(coordinate)) &&
-      this.hasDal()
+    return !!figuresCanPick.find((figure) =>
+      figure.coordinate.equals(coordinate),
     );
   }
 
@@ -331,12 +335,13 @@ export class GameState {
     return !!this.dices.length;
   }
 
-  hasAnyAvailableMove() {
-    return this.distances.find((distance) => {
-      return !!this.field.getAnyFigureOfColorCanMoveOn(
-        distance,
-        this.currentPlayerColor,
-      );
-    });
+  hasAnyAvailableMove(): boolean {
+    return !!this.distances.find(
+      (distance) =>
+        !!this.field.getAnyFigureOfColorCanMoveOn(
+          distance,
+          this.currentPlayerColor,
+        ),
+    );
   }
 }

@@ -54,15 +54,18 @@ export const Game = (props: DaldozaProps) => {
 
   const handleMoveFigure = (to: Coordinate) => {};
 
+  const handleActivateFigure = (coordinate: Coordinate) => {};
+
   return (
     <GameWrapper>
       <Board
         size={size}
-        disabled={!isMyTurn}
+        disabled={gameState.hasAnyAvailableMove()}
         statistic={playerStatistics}
         gameState={gameState}
         onPickFigure={handlePickFigure}
         onMoveFigure={handleMoveFigure}
+        onActivateFigure={handleActivateFigure}
       ></Board>
       <Controls onRoll={() => handleRoll()}></Controls>
       <Logger events={events}></Logger>

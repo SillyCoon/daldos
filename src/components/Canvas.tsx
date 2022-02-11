@@ -61,6 +61,20 @@ export const Canvas = ({
     }
   };
 
+  const handleCanvasDoubleClick = (e: CanvasClickEvent) => {
+    if (rect) {
+      const clickCoord =
+        CanvasCoordinateTranslator.canvasClickToBoardCoordinate(
+          e,
+          size.fieldSize,
+          rect,
+        );
+      if (clickCoord) {
+        onClick(clickCoord, MouseClickType.Double);
+      }
+    }
+  };
+
   return (
     <canvas
       ref={canvasRef}
@@ -70,6 +84,7 @@ export const Canvas = ({
         e.preventDefault();
       }}
       onMouseUp={(e) => handleCanvasClick(e)}
+      onDoubleClick={(e) => handleCanvasDoubleClick(e)}
     ></canvas>
   );
 };
