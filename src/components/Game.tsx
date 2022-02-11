@@ -38,11 +38,18 @@ export const Game = (props: DaldozaProps) => {
     setGameState(gameState.command(CommandTypeEnum.Roll));
   };
 
-  const handlePickFigure = (coordinate: Coordinate) => {};
+  const handlePickFigure = (coordinate: Coordinate) => {
+    setGameState(gameState.pickFigure(coordinate));
+  };
 
-  const handleMoveFigure = (to: Coordinate) => {};
+  const handleMoveFigure = (to: Coordinate) => {
+    const from = gameState.selectedFigure?.coordinate;
+    if (from) setGameState(gameState.makeMove(from, to));
+  };
 
-  const handleActivateFigure = (coordinate: Coordinate) => {};
+  const handleActivateFigure = (coordinate: Coordinate) => {
+    setGameState(gameState.activate(coordinate));
+  };
 
   return (
     <GameWrapper>

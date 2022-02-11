@@ -192,10 +192,13 @@ export class GameState {
   }
 
   canPick(coordinate: Coordinate): boolean {
-    const figuresCanPick = this.field.getAllFiguresCanActivate(
-      this.currentPlayerColor,
+    const figuresCanMove = this.distances.flatMap((distance) =>
+      this.field.getAllFiguresOfColorCanMoveOn(
+        distance,
+        this.currentPlayerColor,
+      ),
     );
-    return !!figuresCanPick.find((figure) =>
+    return !!figuresCanMove.find((figure) =>
       figure.coordinate.equals(coordinate),
     );
   }
