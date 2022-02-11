@@ -15,6 +15,7 @@ import { Color } from '../game/models/game-elements/color';
 import styled from 'styled-components';
 import { CommandTypeEnum } from '../game/models/game-elements/enums/command-type';
 import { Coordinate } from '../game/models/game-elements/coordinate';
+import { Statistic } from '../game/models/game-elements/statistic';
 
 const colorScheme = new ColorScheme();
 const size = new Size();
@@ -39,21 +40,11 @@ export const Game = (props: DaldozaProps) => {
 
   const [isMyTurn, setIsMyTurn] = useState(true);
 
-  const playerStatistics = (gameState: GameState) => {
-    return {
-      name:
-        gameState.currentPlayerColor === 1 ? props.myName : props.opponent.name,
-      win: false,
-    };
+  const playerStatistics: Statistic = {
+    name:
+      gameState.currentPlayerColor === 1 ? props.myName : props.opponent.name,
+    win: false,
   };
-
-  useEffect(() => {
-    const draw = (state: GameState) => {
-      drawer.draw(state, playerStatistics(state));
-    };
-
-    draw(gameState);
-  });
 
   const handleRoll = () => {
     setGameState(gameState.command(CommandTypeEnum.Roll));
@@ -68,7 +59,7 @@ export const Game = (props: DaldozaProps) => {
       <Board
         size={size}
         disabled={!isMyTurn}
-        statistic={playerStatistics(gameState)}
+        statistic={playerStatistics}
         gameState={gameState}
         onPickFigure={handlePickFigure}
         onMoveFigure={handleMoveFigure}
