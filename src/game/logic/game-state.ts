@@ -160,7 +160,9 @@ export class GameState {
 
   canActivate(coordinate: Coordinate): boolean {
     const maybeFigure = this.field.pickFigure(coordinate);
-    return !!maybeFigure?.canActivatedBy(this.currentPlayerColor);
+    return (
+      !!maybeFigure?.canActivatedBy(this.currentPlayerColor) && this.hasDal()
+    );
   }
 
   activate(figureCoordinate: Coordinate): GameState {

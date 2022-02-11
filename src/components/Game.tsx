@@ -33,12 +33,8 @@ export interface DaldozaProps {
 }
 
 export const Game = (props: DaldozaProps) => {
-  const [commands, setCommands] = useState<Command[]>([]);
   const [gameState, setGameState] = useState(GameState.start(size.fieldSize));
   const [events, setEvents] = useState<any[]>([]);
-  const [currentColor, setCurrentColor] = useState<Color>(1);
-
-  const [isMyTurn, setIsMyTurn] = useState(true);
 
   const playerStatistics: Statistic = {
     name:
