@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './game.css';
 import { GameModeEnum } from '../game/models/game-elements/enums/game-mode';
 import { Opponent } from '../game/logic/opponent/opponent';
@@ -33,6 +33,10 @@ export const Game = (props: DaldozaProps) => {
       gameState.currentPlayerColor === 1 ? props.myName : props.opponent.name,
     win: false,
   };
+
+  if (!gameState.hasAnyMove) {
+    setGameState(gameState.skipMove());
+  }
 
   const handleRoll = () => {
     setGameState(gameState.command(CommandTypeEnum.Roll));
