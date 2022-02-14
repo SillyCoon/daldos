@@ -39,11 +39,13 @@ export const Canvas = ({
     } else {
       console.log('no canvas \\0_0/');
     }
-  }, [canvasRef, colorScheme, size]);
+  }, [colorScheme, size]);
 
-  if (drawer) {
-    drawer.draw(gameState, statistic);
-  }
+  useEffect(() => {
+    if (drawer) {
+      drawer.draw(gameState, statistic);
+    }
+  }, [drawer, gameState, statistic]);
 
   const handleCanvasClick = (e: CanvasClickEvent) => {
     if (rect) {

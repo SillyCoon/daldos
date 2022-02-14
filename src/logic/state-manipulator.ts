@@ -3,7 +3,7 @@ import { GameStatusEnum } from '../model/enums/game-status';
 import { Dice } from './dice';
 import { GameState } from '../model/game-state';
 
-export class StateManipulator {
+export class CommandExecutor {
   constructor(private state: GameState) {}
 
   roll(externalDices?: number[]): GameState {

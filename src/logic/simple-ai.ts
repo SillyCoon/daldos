@@ -7,7 +7,7 @@ import {
 } from '../model/command';
 import { GameState } from '../model/game-state';
 import { ReactOpponent } from './opponent';
-import { StateManipulator } from './state-manipulator';
+import { CommandExecutor } from './state-manipulator';
 
 export class SimpleAI implements ReactOpponent {
   order = 2;
@@ -107,7 +107,7 @@ class CommandsHelper {
     commands: Command[],
     currentState: GameState,
   ): ActivateCommand {
-    const stateManipulator = new StateManipulator(currentState);
+    const stateManipulator = new CommandExecutor(currentState);
     const activationCommands = this.filterActivateCommands(commands);
     return activationCommands.filter((activation) => {
       const stateAfterActivation = stateManipulator.activate(
@@ -124,7 +124,7 @@ class CommandsHelper {
     commands: Command[],
     currentState: GameState,
   ): MoveCommand {
-    const stateManipulator = new StateManipulator(currentState);
+    const stateManipulator = new CommandExecutor(currentState);
     const moveCommands: MoveCommand[] = this.filterMoveCommands(commands);
 
     return moveCommands.filter((move) => {

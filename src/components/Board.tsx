@@ -29,6 +29,8 @@ const BoardWrapper = styled.div`
     `}
 `;
 
+const colorScheme = new ColorScheme();
+
 export const Board = ({
   size,
   disabled,
@@ -38,8 +40,6 @@ export const Board = ({
   onMoveFigure,
   onActivateFigure,
 }: BoardProps) => {
-  const colorScheme = new ColorScheme();
-
   const handleBoardClick = (
     boardCoordinate: Coordinate,
     clickType: MouseClickType,

@@ -1,9 +1,15 @@
+import { LogEvent } from '../model/log-event';
+
 interface LoggerProps {
-  events: any[];
+  events: LogEvent[];
 }
 
 export const Logger = ({ events }: LoggerProps) => {
-  const logs = events.map((e) => <p>{e.toString()}</p>);
+  const logs = events.slice(0, 5).map((e) => (
+    <p>
+      Игрок {e.player} {e.message}
+    </p>
+  ));
 
   return (
     <div>
