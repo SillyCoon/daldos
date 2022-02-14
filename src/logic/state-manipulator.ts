@@ -2,25 +2,26 @@ import { Coordinate } from '../model/coordinate';
 import { GameStatusEnum } from '../model/enums/game-status';
 import { Dice } from './dice';
 import { GameState } from '../model/game-state';
+import { FieldManipulator } from './field-manipulator';
 
 export class CommandExecutor {
-  constructor(private state: GameState) {}
+  fieldManipulator: FieldManipulator;
+  constructor(private state: GameState) {
+    this.fieldManipulator = new FieldManipulator(state.field);
+  }
 
   roll(externalDices?: number[]): GameState {
     if (!this.state.hasDices()) {
-      const rolledDices = externalDices
-        ? externalDices
-        : [Dice.roll(), Dice.roll()];
-
-      if (Dice.hasDoubleDal(...rolledDices)) {
-        rolledDices.push(Dice.roll(), Dice.roll());
-      }
+      const rolledDices = externalDices ?? [Dice.roll(), Dice.roll()];
+      const extendedRolledDices = Dice.hasDoubleDal(...rolledDices)
+        ? [...rolledDices]
+        : [...rolledDices, Dice.roll(), Dice.roll()];
 
       const nextState = new GameState(
         this.state.field,
         {
           color: this.state.currentPlayerColor,
-          dices: rolledDices,
+          dices: extendedRolledDices,
           selectedFigure: null,
         },
         this.state.status,
@@ -33,7 +34,7 @@ export class CommandExecutor {
 
   activate(figureCoordinate: Coordinate): GameState {
     if (this.state.hasDal()) {
-      const changedField = this.state.field.activate(
+      const changedField = this.fieldManipulator.activate(
         figureCoordinate,
         this.state.currentPlayerColor,
       );
@@ -58,7 +59,7 @@ export class CommandExecutor {
   }
 
   makeMove(from: Coordinate, to: Coordinate): GameState {
-    const movedField = this.state.field.moveFigure(from, to);
+    const movedField = this.fieldManipulator.moveFigure(from, to);
     const moveDistance = this.state.field.distance(from, to);
     const remainingDices = this.state.removeUsedDices(moveDistance);
     const nextPlayerColor = remainingDices.length

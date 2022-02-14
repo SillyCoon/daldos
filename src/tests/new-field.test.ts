@@ -1,4 +1,5 @@
 import { Field } from '../logic/field';
+import { FieldManipulator } from '../logic/field-manipulator';
 import { Coordinate } from '../model/coordinate';
 import { Figure } from '../model/figure';
 
@@ -29,7 +30,9 @@ describe('Field', () => {
   it('should activate figure', () => {
     const field: Field = Field.initial(16);
 
-    const newField = field.activate(Coordinate.fromXY(0, 0), 1);
+    const fieldManipulator = new FieldManipulator(field);
+
+    const newField = fieldManipulator.activate(Coordinate.fromXY(0, 0), 1);
     const figure = newField.squares[0][0].figure;
     expect(figure?.isActive).toBeTruthy();
   });

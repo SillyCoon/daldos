@@ -117,26 +117,6 @@ export class Field {
     return this.makeSnapshot() === otherField.makeSnapshot();
   }
 
-  activate(figureCoordinate: Coordinate, currentColor: Color): Field {
-    const figure = this.pickFigure(figureCoordinate)?.figure;
-
-    if (figure?.canActivatedBy(currentColor)) {
-      return this.replaceFigure(figureCoordinate, figure.withActivated(true));
-    }
-    return this;
-  }
-
-  moveFigure(from: Coordinate, to: Coordinate): Field {
-    const fromSquare = this.findSquare(from);
-    const toSquare = this.findSquare(to);
-
-    if (!fromSquare || !toSquare) throw new FieldException('Неправильный ход!');
-
-    const fromFigure = this.pickFigure(from)?.figure ?? null;
-
-    return this.replaceFigure(from, null).replaceFigure(to, fromFigure);
-  }
-
   pickFigure(coordinate: Coordinate): Square | null {
     const square = this.squares?.at(coordinate.x)?.at(coordinate.y);
     if (square?.figure) {
