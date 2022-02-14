@@ -1,4 +1,3 @@
-import { Command } from '../../game/logic/commands/command';
 import { GameState } from '../../game/logic/game-state';
 import {
   MoveCommand,
@@ -13,7 +12,7 @@ export class ReactAI implements ReactOpponent {
   order = 2;
   name = 'ИИ';
 
-  send(_: Command | null): Promise<void> {
+  send(_: OpponentCommand | null): Promise<void> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
