@@ -5,6 +5,12 @@ import { GameStatusEnum } from '../models/game-elements/enums/game-status';
 import { Color } from '../models/game-elements/color';
 import { FieldException } from '../models/game-elements/exceptions/field-exception';
 import { Coordinate } from '../models/game-elements/coordinate';
+import {
+  ActivateCommand,
+  MoveCommand,
+  OpponentCommand,
+  RollCommand,
+} from '../../components/model/command';
 
 type PlayerOptions = {
   dices: number[];
@@ -224,31 +230,27 @@ export class GameState {
   }
 
   makeMove(from: Coordinate, to: Coordinate): GameState {
-    if (this.isSquareAvailableToMove(to)) {
-      const movedField = this.field.moveFigure(from, to);
-      const moveDistance = this.field.distance(from, to);
-      const remainingDices = this.removeUsedDices(moveDistance);
-      const nextPlayerColor = remainingDices.length
-        ? this.currentPlayerColor
-        : this.oppositePlayerColor;
-      const status = movedField.onlyOneFigureOfColor(nextPlayerColor)
-        ? this.currentPlayerColor === 1
-          ? GameStatusEnum.FirstWin
-          : GameStatusEnum.SecondWin
-        : GameStatusEnum.Playing;
+    const movedField = this.field.moveFigure(from, to);
+    const moveDistance = this.field.distance(from, to);
+    const remainingDices = this.removeUsedDices(moveDistance);
+    const nextPlayerColor = remainingDices.length
+      ? this.currentPlayerColor
+      : this.oppositePlayerColor;
+    const status = movedField.onlyOneFigureOfColor(nextPlayerColor)
+      ? this.currentPlayerColor === 1
+        ? GameStatusEnum.FirstWin
+        : GameStatusEnum.SecondWin
+      : GameStatusEnum.Playing;
 
-      return new GameState(
-        movedField,
-        {
-          color: nextPlayerColor,
-          dices: remainingDices,
-          selectedFigure: null,
-        },
-        status,
-      );
-    }
-
-    return this;
+    return new GameState(
+      movedField,
+      {
+        color: nextPlayerColor,
+        dices: remainingDices,
+        selectedFigure: null,
+      },
+      status,
+    );
   }
 
   skipMove(): GameState {
@@ -260,21 +262,18 @@ export class GameState {
   }
 
   isSquareAvailableToMove(squareCoordinate: Coordinate): boolean {
-    return !!this.possibleMovesForSelectedFigure.filter(
+    return !!this.possibleMovesForSelectedFigure.find(
       (move) => JSON.stringify(move) === JSON.stringify(squareCoordinate),
-    ).length;
+    );
   }
 
-  getAllAvailableCommands(): any[] {
+  getAllAvailableCommands(): OpponentCommand[] {
     const availableMoveCommands = () => {
-      const commands: any[] = [];
+      const commands: OpponentCommand[] = [];
       this.distances.forEach((distance) => {
-        const movesForDistance: any[] = this.field
+        const movesForDistance: OpponentCommand[] = this.field
           .getAllFiguresOfColorCanMoveOn(distance, this.currentPlayerColor)
           .map((figure) => {
-            if (!figure.coordinate) {
-              throw new FieldException('ИЗМЕНИ ЭТО ПОЖАЛУЙСТА ПОТОМ!!!!');
-            }
             const to = this.field.getSquareByDistanceFromCurrent(
               figure.coordinate,
               distance,
@@ -283,8 +282,8 @@ export class GameState {
             const from = figure.coordinate;
             if (!to) throw new FieldException('Wrong coordinate to pick');
 
-            const hasFigureToEat = this.field.pickFigure(to);
-            return { type: CommandTypeEnum.Move, from, to, hasFigureToEat };
+            const hasFigureToEat = !!this.field.pickFigure(to);
+            return new MoveCommand(from, to, hasFigureToEat ?? false);
           });
         commands.push(...movesForDistance);
       });
@@ -293,7 +292,7 @@ export class GameState {
 
     const availableRollCommands = () => {
       if (!this.hasDices()) {
-        return { type: CommandTypeEnum.Roll };
+        return new RollCommand();
       } else {
         return null;
       }
@@ -303,10 +302,7 @@ export class GameState {
       if (this.hasDal()) {
         return this.field
           .getAllFiguresCanActivate(this.currentPlayerColor)
-          .map((figure) => ({
-            type: CommandTypeEnum.Activate,
-            actionCoordinate: figure.coordinate,
-          }));
+          .map((figure) => new ActivateCommand(figure.coordinate));
       }
       return [];
     };
@@ -314,7 +310,7 @@ export class GameState {
     const rollCommand = availableRollCommands();
     if (rollCommand) return [rollCommand];
 
-    const commands = [];
+    const commands: OpponentCommand[] = [];
     commands.push(...availableActivateCommands());
     commands.push(...availableMoveCommands());
 

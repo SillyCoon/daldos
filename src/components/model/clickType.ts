@@ -22,6 +22,7 @@ export const enum BoardEventType {
   'Pick',
   'Activate',
   'Move',
+  'Roll',
   'Undefined',
 }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import './game.css';
 import { GameModeEnum } from '../game/models/game-elements/enums/game-mode';
-import { Opponent } from '../game/logic/opponent/opponent';
 import { Size } from '../game/models/draw/size';
 import { Board } from './Board';
 import { Controls } from './Controls';
@@ -11,6 +10,8 @@ import styled from 'styled-components';
 import { CommandTypeEnum } from '../game/models/game-elements/enums/command-type';
 import { Coordinate } from '../game/models/game-elements/coordinate';
 import { Statistic } from '../game/models/game-elements/statistic';
+import { ReactOpponent } from './logic/reactOpponent';
+import { isActivate, isMove, isRoll, OpponentCommand } from './model/command';
 
 const size = new Size();
 
@@ -21,8 +22,10 @@ const GameWrapper = styled.div`
 export interface DaldozaProps {
   myName: string;
   mode: GameModeEnum;
-  opponent: Opponent;
+  opponent: ReactOpponent;
 }
+
+const myColor = 1;
 
 export const Game = (props: DaldozaProps) => {
   const [gameState, setGameState] = useState(GameState.start(size.fieldSize));
@@ -38,6 +41,23 @@ export const Game = (props: DaldozaProps) => {
     setGameState(gameState.skipMove());
   }
 
+  useEffect(() => {
+    if (gameState.currentPlayerColor !== myColor) {
+      props.opponent.getCommandFor(gameState).then((c: OpponentCommand) => {
+        console.log(c);
+        if (isRoll(c)) {
+          handleRoll();
+        }
+        if (isActivate(c)) {
+          handleActivateFigure(c.coordinate);
+        }
+        if (isMove(c)) {
+          handleMoveFigure(c.to, c.from);
+        }
+      });
+    }
+  }, [gameState, props.opponent]);
+
   const handleRoll = () => {
     setGameState(gameState.command(CommandTypeEnum.Roll));
   };
@@ -46,9 +66,10 @@ export const Game = (props: DaldozaProps) => {
     setGameState(gameState.pickFigure(coordinate));
   };
 
-  const handleMoveFigure = (to: Coordinate) => {
-    const from = gameState.selectedFigure?.coordinate;
-    if (from) setGameState(gameState.makeMove(from, to));
+  const handleMoveFigure = (to: Coordinate, from?: Coordinate) => {
+    const fromCoord = from ?? gameState.selectedFigure?.coordinate;
+    console.log(fromCoord);
+    if (fromCoord) setGameState(gameState.makeMove(fromCoord, to));
   };
 
   const handleActivateFigure = (coordinate: Coordinate) => {
