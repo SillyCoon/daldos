@@ -1,16 +1,16 @@
-import { Field, FieldFigure } from './field';
-import { Dice } from './dice';
-import { Color } from '../model/color';
+import { Field, FieldFigure } from '../logic/field';
+import { Dice } from '../logic/dice';
+import { Color } from './color';
 import {
   OpponentCommand,
   MoveCommand,
   RollCommand,
   ActivateCommand,
-} from '../model/command';
-import { Coordinate } from '../model/coordinate';
-import { CommandTypeEnum } from '../model/enums/command-type';
-import { GameStatusEnum } from '../model/enums/game-status';
-import { FieldException } from '../model/exceptions/field-exception';
+} from './command';
+import { Coordinate } from './coordinate';
+import { CommandTypeEnum } from './enums/command-type';
+import { GameStatusEnum } from './enums/game-status';
+import { FieldException } from './exceptions/field-exception';
 
 type PlayerOptions = {
   dices: number[];
@@ -98,103 +98,11 @@ export class GameState {
     );
   }
 
-  command(
-    type: CommandTypeEnum,
-    params?: {
-      from?: Coordinate;
-      to?: Coordinate;
-      figureCoordinate?: Coordinate;
-      dices?: number[];
-    },
-  ): GameState {
-    let nextState;
-    switch (type) {
-      case CommandTypeEnum.Move:
-        if (params?.from) {
-          this.selectedFigure = this.field.pickFigure(params.from);
-        }
-        nextState =
-          this.selectedFigure && params?.to
-            ? this.makeMove(this.selectedFigure.coordinate, params.to)
-            : this;
-        break;
-      case CommandTypeEnum.Activate:
-        if (params?.figureCoordinate)
-          nextState = this.activate(params.figureCoordinate);
-        else nextState = this;
-        break;
-      case CommandTypeEnum.PickFigure:
-        if (params?.figureCoordinate)
-          nextState = this.pickFigure(params.figureCoordinate);
-        else nextState = this;
-        break;
-      case CommandTypeEnum.Roll:
-        // TODO: серьезно подумать над разделением интерфейсов
-        nextState = this.roll(params && params.dices ? params.dices : []);
-        break;
-      default:
-        throw new Error('No such command!');
-    }
-
-    return nextState;
-  }
-
-  roll(externalDices: number[]): GameState {
-    if (!this.hasDices()) {
-      const rolledDices = externalDices
-        ? externalDices
-        : [Dice.roll(), Dice.roll()];
-
-      if (Dice.hasDoubleDal(...rolledDices)) {
-        rolledDices.push(Dice.roll(), Dice.roll());
-      }
-
-      const nextState = new GameState(
-        this.field,
-        {
-          color: this.currentPlayerColor,
-          dices: rolledDices,
-          selectedFigure: null,
-        },
-        this.status,
-      );
-      return nextState;
-    } else {
-      return this;
-    }
-  }
-
   canActivate(coordinate: Coordinate): boolean {
     const maybeFigure = this.field.pickFigure(coordinate);
     return (
       !!maybeFigure?.canActivatedBy(this.currentPlayerColor) && this.hasDal()
     );
-  }
-
-  activate(figureCoordinate: Coordinate): GameState {
-    if (this.hasDal()) {
-      const changedField = this.field.activate(
-        figureCoordinate,
-        this.currentPlayerColor,
-      );
-      if (changedField === this.field) return this;
-      const remainingDices = this.removeUsedDices(Dice.dal);
-      const nextPlayerColor = remainingDices.length
-        ? this.currentPlayerColor
-        : this.oppositePlayerColor;
-      const status = this.status;
-      return new GameState(
-        changedField,
-        {
-          color: nextPlayerColor,
-          dices: remainingDices,
-          selectedFigure: null,
-        },
-        status,
-      );
-    } else {
-      return this;
-    }
   }
 
   canPick(coordinate: Coordinate): boolean {
@@ -206,58 +114,6 @@ export class GameState {
     );
     return !!figuresCanMove.find((figure) =>
       figure.coordinate.equals(coordinate),
-    );
-  }
-
-  pickFigure(figureCoordinate: Coordinate): GameState {
-    const selectedFigure = this.field.pickFigure(figureCoordinate);
-    if (!selectedFigure || !selectedFigure.active) return this;
-
-    selectedFigure.coordinate = figureCoordinate;
-
-    if (selectedFigure && selectedFigure.color === this.currentPlayerColor) {
-      return new GameState(
-        this.field,
-        {
-          color: this.currentPlayerColor,
-          dices: this.dices,
-          selectedFigure,
-        },
-        this.status,
-      );
-    }
-    return this;
-  }
-
-  makeMove(from: Coordinate, to: Coordinate): GameState {
-    const movedField = this.field.moveFigure(from, to);
-    const moveDistance = this.field.distance(from, to);
-    const remainingDices = this.removeUsedDices(moveDistance);
-    const nextPlayerColor = remainingDices.length
-      ? this.currentPlayerColor
-      : this.oppositePlayerColor;
-    const status = movedField.onlyOneFigureOfColor(nextPlayerColor)
-      ? this.currentPlayerColor === 1
-        ? GameStatusEnum.FirstWin
-        : GameStatusEnum.SecondWin
-      : GameStatusEnum.Playing;
-
-    return new GameState(
-      movedField,
-      {
-        color: nextPlayerColor,
-        dices: remainingDices,
-        selectedFigure: null,
-      },
-      status,
-    );
-  }
-
-  skipMove(): GameState {
-    return new GameState(
-      this.field,
-      { dices: [], color: this.oppositePlayerColor, selectedFigure: null },
-      this.status,
     );
   }
 
@@ -317,22 +173,22 @@ export class GameState {
     return commands;
   }
 
-  private selectedFigureReadyToMove(): boolean {
+  public selectedFigureReadyToMove(): boolean {
     const figure = this.selectedFigure;
     return !!(figure?.color === this.currentPlayerColor && figure.active);
   }
 
-  private removeUsedDices(distance: number): number[] {
+  public removeUsedDices(distance: number): number[] {
     if (distance === this.dices[0] + this.dices[1]) return [];
     const usedDiceIndex = this.dices.indexOf(distance);
     return this.dices.filter((_, i) => i !== usedDiceIndex);
   }
 
-  private hasDal() {
+  public hasDal() {
     return this.dices.some((dice) => dice === Dice.dal);
   }
 
-  private hasDices() {
+  public hasDices() {
     return !!this.dices.length;
   }
 

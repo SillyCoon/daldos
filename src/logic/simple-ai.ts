@@ -5,8 +5,9 @@ import {
   isMove,
   isActivate,
 } from '../model/command';
-import { GameState } from './game-state';
+import { GameState } from '../model/game-state';
 import { ReactOpponent } from './opponent';
+import { StateManipulator } from './state-manipulator';
 
 export class SimpleAI implements ReactOpponent {
   order = 2;
@@ -106,9 +107,12 @@ class CommandsHelper {
     commands: OpponentCommand[],
     currentState: GameState,
   ): ActivateCommand {
+    const stateManipulator = new StateManipulator(currentState);
     const activationCommands = this.filterActivateCommands(commands);
     return activationCommands.filter((activation) => {
-      const stateAfterActivation = currentState.activate(activation.coordinate);
+      const stateAfterActivation = stateManipulator.activate(
+        activation.coordinate,
+      );
       if (stateAfterActivation.hasAnyAvailableMove()) {
         return true;
       }
@@ -120,10 +124,11 @@ class CommandsHelper {
     commands: OpponentCommand[],
     currentState: GameState,
   ): MoveCommand {
+    const stateManipulator = new StateManipulator(currentState);
     const moveCommands: MoveCommand[] = this.filterMoveCommands(commands);
 
     return moveCommands.filter((move) => {
-      const stateAfterMove = currentState.makeMove(move.from, move.to);
+      const stateAfterMove = stateManipulator.makeMove(move.from, move.to);
       if (stateAfterMove.hasAnyAvailableMove()) {
         return true;
       }

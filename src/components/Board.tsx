@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { GameState } from '../logic/game-state';
+import { GameState } from '../model/game-state';
 import {
   MouseClickType,
   mouseToGame,

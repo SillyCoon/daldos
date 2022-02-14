@@ -3,7 +3,7 @@ import { Size } from '../model/draw/size';
 import { Figure } from '../model/figure';
 import { Statistic } from '../model/statistic';
 import { DicePresentation, dicePresentation } from './dice-presentation';
-import { GameState } from './game-state';
+import { GameState } from '../model/game-state';
 
 export class ReactDrawer {
   colorScheme: ColorScheme;
