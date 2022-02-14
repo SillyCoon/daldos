@@ -1,10 +1,10 @@
-import { Square } from '../models/game-elements/square';
+import { Color } from '../model/color';
+import { Coordinate } from '../model/coordinate';
+import { FieldException } from '../model/exceptions/field-exception';
+import { FieldSnapshot } from '../model/field-snapshot';
+import { Figure } from '../model/figure';
+import { Square } from '../model/square';
 import { NotationConverter } from './notation-converter';
-import { FieldException } from '../models/game-elements/exceptions/field-exception';
-import { FieldSnapshot } from '../models/game-elements/field-snapshot';
-import { Coordinate } from '../models/game-elements/coordinate';
-import { Color } from '../models/game-elements/color';
-import { Figure } from '../models/game-elements/figure';
 
 export type FieldFigure = Figure & { coordinate: Coordinate };
 

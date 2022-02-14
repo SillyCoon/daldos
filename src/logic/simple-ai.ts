@@ -1,4 +1,3 @@
-import { GameState } from '../../game/logic/game-state';
 import {
   MoveCommand,
   OpponentCommand,
@@ -6,6 +5,7 @@ import {
   isMove,
   isActivate,
 } from '../model/command';
+import { GameState } from './game-state';
 import { ReactOpponent } from './opponent';
 
 export class SimpleAI implements ReactOpponent {

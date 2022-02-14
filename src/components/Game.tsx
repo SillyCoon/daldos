@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import './game.css';
-import { GameModeEnum } from '../game/models/game-elements/enums/game-mode';
-import { Size } from '../game/models/draw/size';
+import { GameModeEnum } from '../model/enums/game-mode';
+import styled from 'styled-components';
+import { GameState } from '../logic/game-state';
+import { ReactOpponent } from '../logic/opponent';
+import { OpponentCommand, isRoll, isActivate, isMove } from '../model/command';
+import { Coordinate } from '../model/coordinate';
+import { Size } from '../model/draw/size';
+import { CommandTypeEnum } from '../model/enums/command-type';
+import { Statistic } from '../model/statistic';
 import { Board } from './Board';
 import { Controls } from './Controls';
 import { Logger } from './Logger';
-import { GameState } from '../game/logic/game-state';
-import styled from 'styled-components';
-import { CommandTypeEnum } from '../game/models/game-elements/enums/command-type';
-import { Coordinate } from '../game/models/game-elements/coordinate';
-import { Statistic } from '../game/models/game-elements/statistic';
-import { ReactOpponent } from './logic/opponent';
-import { isActivate, isMove, isRoll, OpponentCommand } from './model/command';
 
 const size = new Size();
 

@@ -1,4 +1,4 @@
-import { Color } from '../../game/models/game-elements/color';
+import { Color } from './color';
 
 export interface LogEvent {
   player: Color;

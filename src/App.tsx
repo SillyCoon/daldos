@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { DaldozaProps, Game } from './components/Game';
-import { SimpleAI } from './components/logic/simple-ai';
-import { GameModeEnum } from './game/models/game-elements/enums/game-mode';
+import { SimpleAI } from './logic/simple-ai';
+import { GameModeEnum } from './model/enums/game-mode';
 
 const Navbar = styled.div`
   width: 100%;

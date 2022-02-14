@@ -1,15 +1,15 @@
-import { Size } from '../game/models/draw/size';
 import styled, { css } from 'styled-components';
-import { Canvas } from './Canvas';
-import { ColorScheme } from '../game/models/draw/color-scheme';
-import { GameState } from '../game/logic/game-state';
-import { Statistic } from '../game/models/game-elements/statistic';
-import { Coordinate } from '../game/models/game-elements/coordinate';
+import { GameState } from '../logic/game-state';
 import {
-  BoardEventType,
   MouseClickType,
   mouseToGame,
-} from './model/click-type';
+  BoardEventType,
+} from '../model/click-type';
+import { Coordinate } from '../model/coordinate';
+import { ColorScheme } from '../model/draw/color-scheme';
+import { Size } from '../model/draw/size';
+import { Statistic } from '../model/statistic';
+import { Canvas } from './Canvas';
 
 interface BoardProps {
   size: Size;

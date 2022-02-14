@@ -1,6 +1,6 @@
-import { CoordinateTranslator } from '../../game/logic/coordinate-translator';
-import { Coordinate } from '../../game/models/game-elements/coordinate';
+import { CoordinateTranslator } from '../logic/coordinate-translator';
 import { CanvasClickEvent } from '../model/canvas-click-event';
+import { Coordinate } from '../model/coordinate';
 
 export namespace CanvasCoordinateTranslator {
   export const canvasClickToBoardCoordinate = (

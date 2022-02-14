@@ -1,8 +1,8 @@
-import Dice from '../../assets/dice.png';
-import Cross from '../../assets/cross.png';
-import Two from '../../assets/two.png';
-import Three from '../../assets/three.png';
-import Four from '../../assets/four.png';
+import Dice from '../assets/dice.png';
+import Cross from '../assets/cross.png';
+import Two from '../assets/two.png';
+import Three from '../assets/three.png';
+import Four from '../assets/four.png';
 
 export type DicePresentation = typeof dicePresentation;
 

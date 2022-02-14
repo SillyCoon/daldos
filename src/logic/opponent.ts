@@ -1,5 +1,5 @@
-import { GameState } from '../../game/logic/game-state';
 import { OpponentCommand } from '../model/command';
+import { GameState } from './game-state';
 
 export interface ReactOpponent {
   name: string;

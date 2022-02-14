@@ -1,12 +1,9 @@
-import {
-  DicePresentation,
-  dicePresentation,
-} from '../../game/logic/draw/dice-presentation';
-import { GameState } from '../../game/logic/game-state';
-import { ColorScheme } from '../../game/models/draw/color-scheme';
-import { Size } from '../../game/models/draw/size';
-import { Figure } from '../../game/models/game-elements/figure';
-import { Statistic } from '../../game/models/game-elements/statistic';
+import { ColorScheme } from '../model/draw/color-scheme';
+import { Size } from '../model/draw/size';
+import { Figure } from '../model/figure';
+import { Statistic } from '../model/statistic';
+import { DicePresentation, dicePresentation } from './dice-presentation';
+import { GameState } from './game-state';
 
 export class ReactDrawer {
   colorScheme: ColorScheme;

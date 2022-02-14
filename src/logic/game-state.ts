@@ -1,16 +1,16 @@
 import { Field, FieldFigure } from './field';
 import { Dice } from './dice';
-import { CommandTypeEnum } from '../models/game-elements/enums/command-type';
-import { GameStatusEnum } from '../models/game-elements/enums/game-status';
-import { Color } from '../models/game-elements/color';
-import { FieldException } from '../models/game-elements/exceptions/field-exception';
-import { Coordinate } from '../models/game-elements/coordinate';
+import { Color } from '../model/color';
 import {
-  ActivateCommand,
-  MoveCommand,
   OpponentCommand,
+  MoveCommand,
   RollCommand,
-} from '../../components/model/command';
+  ActivateCommand,
+} from '../model/command';
+import { Coordinate } from '../model/coordinate';
+import { CommandTypeEnum } from '../model/enums/command-type';
+import { GameStatusEnum } from '../model/enums/game-status';
+import { FieldException } from '../model/exceptions/field-exception';
 
 type PlayerOptions = {
   dices: number[];

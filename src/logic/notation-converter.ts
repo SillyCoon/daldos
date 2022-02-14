@@ -1,7 +1,7 @@
-import { Figure } from '../models/game-elements/figure';
-import { NotationEnum } from '../models/game-elements/enums/notation';
+import { Color } from '../model/color';
+import { NotationEnum } from '../model/enums/notation';
+import { Figure } from '../model/figure';
 import { Field } from './field';
-import { Color } from '../models/game-elements/color';
 
 export class NotationConverter {
   static toNotation(field: Field): string {

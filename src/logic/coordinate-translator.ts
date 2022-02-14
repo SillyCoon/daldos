@@ -1,5 +1,5 @@
-import { Size } from '../models/draw/size';
-import { Coordinate } from '../models/game-elements/coordinate';
+import { Coordinate } from '../model/coordinate';
+import { Size } from '../model/draw/size';
 
 export class CoordinateTranslator {
   static translateMousePositionToGameCoordinates(

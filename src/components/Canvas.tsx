@@ -1,13 +1,13 @@
 import { Ref, useEffect, useRef, useState } from 'react';
-import { GameState } from '../game/logic/game-state';
-import { ColorScheme } from '../game/models/draw/color-scheme';
-import { Size } from '../game/models/draw/size';
-import { Coordinate } from '../game/models/game-elements/coordinate';
-import { Statistic } from '../game/models/game-elements/statistic';
-import { CanvasCoordinateTranslator } from './helpers/canvas-coordinate-translator';
-import { ReactDrawer } from './helpers/react-drawer';
-import { CanvasClickEvent } from './model/canvas-click-event';
-import { fromEventToType, MouseClickType } from './model/click-type';
+import { CanvasCoordinateTranslator } from '../helpers/canvas-coordinate-translator';
+import { GameState } from '../logic/game-state';
+import { ReactDrawer } from '../logic/react-drawer';
+import { CanvasClickEvent } from '../model/canvas-click-event';
+import { MouseClickType, fromEventToType } from '../model/click-type';
+import { Coordinate } from '../model/coordinate';
+import { ColorScheme } from '../model/draw/color-scheme';
+import { Size } from '../model/draw/size';
+import { Statistic } from '../model/statistic';
 
 export interface CanvasProps {
   size: Size;
