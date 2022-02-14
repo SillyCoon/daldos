@@ -41,10 +41,11 @@ export const Game = (props: DaldozaProps) => {
     setGameState(gameState.skipMove());
   }
 
+  const isMyMove = gameState.currentPlayerColor === myColor;
+
   useEffect(() => {
-    if (gameState.currentPlayerColor !== myColor) {
+    if (!isMyMove) {
       props.opponent.getCommandFor(gameState).then((c: OpponentCommand) => {
-        console.log(c);
         if (isRoll(c)) {
           handleRoll();
         }
@@ -56,7 +57,7 @@ export const Game = (props: DaldozaProps) => {
         }
       });
     }
-  }, [gameState, props.opponent]);
+  });
 
   const handleRoll = () => {
     setGameState(gameState.command(CommandTypeEnum.Roll));
@@ -80,14 +81,14 @@ export const Game = (props: DaldozaProps) => {
     <GameWrapper>
       <Board
         size={size}
-        disabled={gameState.hasAnyAvailableMove()}
+        disabled={!isMyMove}
         statistic={playerStatistics}
         gameState={gameState}
         onPickFigure={handlePickFigure}
         onMoveFigure={handleMoveFigure}
         onActivateFigure={handleActivateFigure}
       ></Board>
-      <Controls onRoll={() => handleRoll()}></Controls>
+      <Controls onRoll={() => handleRoll()} disabled={!isMyMove}></Controls>
       <Logger events={events}></Logger>
     </GameWrapper>
   );
