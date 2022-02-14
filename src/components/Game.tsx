@@ -21,6 +21,13 @@ const GameWrapper = styled.div`
   margin-left: 200px;
 `;
 
+const timeout1000 = () =>
+  new Promise<void>((resolve, _) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+
 export interface DaldozaProps {
   myName: string;
   mode: GameModeEnum;
@@ -41,9 +48,13 @@ export const Game = (props: DaldozaProps) => {
     win: false,
   };
 
-  if (!gameState.hasAnyMove) {
-    setGameState(executor.skipMove());
-  }
+  useEffect(() => {
+    if (!gameState.hasAnyMove) {
+      timeout1000().then(() => {
+        setGameState(executor.skipMove());
+      });
+    }
+  });
 
   const prependEvent = (event: LogEvent): void => {
     setEvents([event, ...events]);
@@ -116,7 +127,10 @@ export const Game = (props: DaldozaProps) => {
         onMoveFigure={handleMoveFigure}
         onActivateFigure={handleActivateFigure}
       ></Board>
-      <Controls onRoll={() => handleRoll()} disabled={!isMyMove}></Controls>
+      <Controls
+        onRoll={handleRoll}
+        disabled={!isMyMove || !!gameState.dices.length}
+      ></Controls>
       <Logger events={events}></Logger>
     </GameWrapper>
   );

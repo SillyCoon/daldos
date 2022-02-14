@@ -14,8 +14,8 @@ export class CommandExecutor {
     if (!this.state.hasDices()) {
       const rolledDices = externalDices ?? [Dice.roll(), Dice.roll()];
       const extendedRolledDices = Dice.hasDoubleDal(...rolledDices)
-        ? [...rolledDices]
-        : [...rolledDices, Dice.roll(), Dice.roll()];
+        ? [...rolledDices, Dice.roll(), Dice.roll()]
+        : [...rolledDices];
 
       const nextState = new GameState(
         this.state.field,
