@@ -92,32 +92,3 @@ export const Board = ({
     </BoardWrapper>
   );
 };
-
-class InteractiveBoardTemplate {
-  // handleDoubleClick() {
-  //   return fromEvent<MouseEvent>(this.canvas, 'dblclick').pipe(
-  //     map((event) => this.getActionCoordinate(event)),
-  //     filter((coordinates) => !!coordinates),
-  //   );
-  // }
-  // handleLeftClick() {
-  //   return this._handleMouseupEvent().pipe(
-  //     filter((event) => event.button === 0),
-  //     map((event) => this.getActionCoordinate(event)),
-  //   );
-  // }
-  // handleRightClick() {
-  //   return this._handleMouseupEvent().pipe(
-  //     filter((event) => event.button === 2),
-  //     map((event) => this.getActionCoordinate(event)),
-  //   );
-  // }
-  // _handleMouseupEvent(): Observable<MouseEvent> {
-  //   return fromEvent<MouseEvent>(this.canvas, 'mouseup').pipe(
-  //     filter((event) => !!this.getActionCoordinate(event)),
-  //   );
-  // }
-}
-function fromMouseToGame(clickType: MouseClickType) {
-  throw new Error('Function not implemented.');
-}

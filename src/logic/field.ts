@@ -276,28 +276,20 @@ export class Field {
     );
   }
 
-  restore(snapshot: string): void {
-    this.squares = [];
-    this.figures = [];
-    const fieldColumns = snapshot.split('\n');
+  restore(snapshot: string): Field {
+    const fieldColumns: string[][] = snapshot
+      .split('\n')
+      .map((c) => c.split(''));
 
-    const makeFigure = (
-      char: string,
-      coordinate: Coordinate,
-    ): FieldFigure | null => {
-      const figure: Figure | null = NotationConverter.charToFigure(char);
-      return figure ? this.addCoordinate(figure, coordinate) : null;
-    };
+    const makeFigure = (char: string) => NotationConverter.charToFigure(char);
 
-    for (let x = 0; x < this.colsLength; x++) {
-      this.squares.push([]);
-      const rowLength = x === 1 ? this.middleRowLength : this.sideRowLength;
-      for (let y = 0; y < rowLength; y++) {
-        const figure = makeFigure(fieldColumns[x][y], Coordinate.fromXY(x, y));
-        if (figure) this.figures.push(figure);
-        this.squares[x].push(new Square(Coordinate.fromXY(x, y), figure));
-      }
-    }
+    const squares = fieldColumns.map((col, x) =>
+      col.map(
+        (square, y) => new Square(Coordinate.fromXY(x, y), makeFigure(square)),
+      ),
+    );
+
+    return Field.initial(3);
   }
 
   equals(otherField: Field) {

@@ -6,6 +6,10 @@ export class Square {
   highlighted: boolean;
   coordinate: Coordinate;
 
+  withFigure(figure: Figure | null): Square {
+    return new Square(this.coordinate, figure, this.highlighted);
+  }
+
   get hasFigure() {
     return !!this.figure;
   }

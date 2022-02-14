@@ -2,9 +2,10 @@ import { Color } from '../model/color';
 import { NotationEnum } from '../model/enums/notation';
 import { Figure } from '../model/figure';
 import { Field } from './field';
+import { NewField } from './new-field';
 
 export class NotationConverter {
-  static toNotation(field: Field): string {
+  static toNotation(field: Field | NewField): string {
     let notation = '';
     field.squares.forEach((row) => {
       row.forEach((square) => {

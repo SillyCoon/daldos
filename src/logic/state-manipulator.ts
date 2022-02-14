@@ -82,21 +82,22 @@ export class CommandExecutor {
   }
 
   pickFigure(figureCoordinate: Coordinate): GameState {
-    const selectedFigure = this.state.field.pickFigure(figureCoordinate);
-    if (!selectedFigure || !selectedFigure.active) return this.state;
+    const selectedFigureSquare = this.state.field.pickFigure(figureCoordinate);
+    if (!selectedFigureSquare || !selectedFigureSquare?.figure?.active)
+      return this.state;
 
-    selectedFigure.coordinate = figureCoordinate;
+    selectedFigureSquare.coordinate = figureCoordinate;
 
     if (
-      selectedFigure &&
-      selectedFigure.color === this.state.currentPlayerColor
+      selectedFigureSquare &&
+      selectedFigureSquare?.figure?.color === this.state.currentPlayerColor
     ) {
       return new GameState(
         this.state.field,
         {
           color: this.state.currentPlayerColor,
           dices: this.state.dices,
-          selectedFigure,
+          selectedFigure: selectedFigureSquare ?? null,
         },
         this.state.status,
       );

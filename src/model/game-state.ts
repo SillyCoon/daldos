@@ -1,27 +1,28 @@
-import { Field, FieldFigure } from '../logic/field';
 import { Dice } from '../logic/dice';
 import { Color } from './color';
 import { Command, MoveCommand, RollCommand, ActivateCommand } from './command';
 import { Coordinate } from './coordinate';
 import { GameStatusEnum } from './enums/game-status';
 import { FieldException } from './exceptions/field-exception';
+import { NewField } from '../logic/new-field';
+import { Square } from './square';
 
 type PlayerOptions = {
   dices: number[];
   color: Color;
-  selectedFigure: FieldFigure | null;
+  selectedFigure: Square | null;
 };
 
 export class GameState {
-  field: Field;
+  field: NewField;
   dices: number[];
   currentPlayerColor: Color;
-  selectedFigure: FieldFigure | null;
+  selectedFigure: Square | null;
   status: GameStatusEnum;
   color: Color = 1;
 
   constructor(
-    field: Field,
+    field: NewField,
     { dices, color, selectedFigure }: PlayerOptions,
     status: GameStatusEnum,
   ) {
@@ -33,7 +34,7 @@ export class GameState {
   }
 
   static start(fieldSize: number): GameState {
-    const field = Field.initial(fieldSize);
+    const field = NewField.initial(fieldSize);
     const playerOptions: PlayerOptions = {
       dices: [],
       color: 1,
@@ -93,7 +94,7 @@ export class GameState {
   }
 
   canActivate(coordinate: Coordinate): boolean {
-    const maybeFigure = this.field.pickFigure(coordinate);
+    const maybeFigure = this.field.pickFigure(coordinate)?.figure;
     return (
       !!maybeFigure?.canActivatedBy(this.currentPlayerColor) && this.hasDal()
     );
@@ -168,7 +169,7 @@ export class GameState {
   }
 
   public selectedFigureReadyToMove(): boolean {
-    const figure = this.selectedFigure;
+    const figure = this.selectedFigure?.figure;
     return !!(figure?.color === this.currentPlayerColor && figure.active);
   }
 

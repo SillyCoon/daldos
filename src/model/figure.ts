@@ -2,17 +2,21 @@ import { Color } from './color';
 
 export class Figure {
   color: Color;
-  isActive: Boolean;
-  canMove: Boolean;
+  isActive: boolean;
+  canMove: boolean;
 
-  constructor(color: Color) {
+  constructor(color: Color, isActive?: boolean) {
     this.color = color;
-    this.isActive = false;
+    this.isActive = isActive ?? false;
     this.canMove = false;
   }
 
   activate() {
     this.isActive = true;
+  }
+
+  withActivated(activated: boolean): Figure {
+    return new Figure(this.color, activated);
   }
 
   get active() {

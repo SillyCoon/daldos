@@ -5,8 +5,8 @@ interface LoggerProps {
 }
 
 export const Logger = ({ events }: LoggerProps) => {
-  const logs = events.slice(0, 5).map((e) => (
-    <p>
+  const logs = events.slice(0, 5).map((e, id) => (
+    <p key={id}>
       Игрок {e.player} {e.message}
     </p>
   ));
