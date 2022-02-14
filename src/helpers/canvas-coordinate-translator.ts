@@ -1,5 +1,5 @@
 import { CoordinateTranslator } from '../logic/coordinate-translator';
-import { CanvasClickEvent } from '../model/canvas-click-event';
+import { CanvasClickEvent } from '../model/draw/canvas-click-event';
 import { Coordinate } from '../model/coordinate';
 
 export namespace CanvasCoordinateTranslator {

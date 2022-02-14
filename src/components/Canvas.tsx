@@ -2,7 +2,7 @@ import { Ref, useEffect, useRef, useState } from 'react';
 import { CanvasCoordinateTranslator } from '../helpers/canvas-coordinate-translator';
 import { GameState } from '../model/game-state';
 import { ReactDrawer } from '../logic/react-drawer';
-import { CanvasClickEvent } from '../model/canvas-click-event';
+import { CanvasClickEvent } from '../model/draw/canvas-click-event';
 import { MouseClickType, fromEventToType } from '../model/click-type';
 import { Coordinate } from '../model/coordinate';
 import { ColorScheme } from '../model/draw/color-scheme';
