@@ -6,206 +6,56 @@ import { Figure } from '../model/figure';
 import { Square } from '../model/square';
 import { NotationConverter } from './notation-converter';
 
-export type FieldFigure = Figure & { coordinate: Coordinate };
-
+// fully immutable field!!!
 export class Field {
   squares: Square[][] = [];
-  sideRowLength: number;
-  colsLength: number = 3;
-  figures: FieldFigure[] = [];
+  flatSquares: Square[] = [];
 
   get middleRowLength() {
     return this.sideRowLength + 1;
   }
 
-  constructor(snapshot: FieldSnapshot) {
-    this.sideRowLength = snapshot.size;
-    this.colsLength = 3;
-    this.restore(snapshot.value);
+  get sideRowLength(): number {
+    return this.squares[0].length;
+  }
+
+  get colsLength(): number {
+    return this.squares.length;
+  }
+
+  get squaresWithFigures(): Square[] {
+    return this.flatSquares.filter((s) => !!s.figure);
+  }
+
+  constructor(squares: Square[][]) {
+    this.squares = squares;
+    this.flatSquares = squares.flat();
   }
 
   static initial(size = 16): Field {
     const snapshot = new FieldSnapshot(NotationConverter.initialNotation(size));
-    return new Field(snapshot);
+    return Field.restore(snapshot);
   }
 
-  activate(figureCoordinate: Coordinate, currentColor: Color): Field {
-    const changingField = this.clone();
-    const activatingFigure = changingField.pickFigure(figureCoordinate);
+  static restore(snapshot: FieldSnapshot): Field {
+    const fieldColumns: string[][] = snapshot.value
+      .split('\n')
+      .map((c) => c.split(''));
 
-    if (activatingFigure?.canActivatedBy(currentColor)) {
-      activatingFigure.activate();
-      return changingField;
-    }
-    return this;
-  }
+    const makeFigure = (char: string) => NotationConverter.charToFigure(char);
 
-  moveFigure(from: Coordinate, to: Coordinate): Field {
-    const changingField = this.clone(); // чтобы изменения не затронули старое состояние поля
-    const fromSquare = changingField.findSquare(from);
-    const toSquare = changingField.findSquare(to);
-
-    if (!fromSquare || !toSquare) throw new FieldException('Неправильный ход!');
-
-    toSquare.figure = fromSquare.figure;
-    fromSquare.figure = null;
-
-    // TODO: архитектура от бога просто, чтобы поменять координаты фигур, придется еще раз
-    // переводить в нотацию и создавать поле
-    // в перспективе можно двигать сразу в нотации или избавиться от понятия поля и оставить только фигуры
-    // или избавиться от поля в данном виде и оставить только нотацию в виде массива символов
-
-    // snapshot[to.x][to.y] = snapshot[from.x][from.y]
-    // snapshot[from.x][from.y] = '*'
-    return changingField.clone();
-  }
-
-  pickFigure(coordinate: Coordinate): FieldFigure | null {
-    // TODO: лучше массивом с прямым доступом по координатам
-    // тогда и в фигуры пихать не придется эту залупу сука тупой идиот писавший это (я)
-    const figure = this.figures.find(
-      (figure) =>
-        figure.coordinate?.x === coordinate.x &&
-        figure.coordinate?.y === coordinate.y,
-    );
-    return figure ?? null;
-  }
-
-  findSquare(coordinate: Coordinate): Square {
-    return this.squares[coordinate.x][coordinate.y];
-  }
-
-  getAnyFigureOfColorCanMoveOn(
-    distance: number,
-    color: Color,
-  ): FieldFigure | null {
-    return this.getAllFiguresOfColorCanMoveOn(distance, color).pop() ?? null;
-  }
-
-  getAllFiguresOfColorCanMoveOn(distance: number, color: Color): FieldFigure[] {
-    return this.figures.filter((figure) => {
-      let squareToMove;
-      if (figure.color === color && figure.active && figure.coordinate) {
-        squareToMove = this.getNotBlockedSquareCoordinateByDistanceFrom(
-          figure.coordinate,
-          distance,
-          color,
-        );
-      }
-      return !!squareToMove;
-    });
-  }
-
-  getNotBlockedSquareCoordinateByDistanceFrom(
-    fromCoordinate: Coordinate,
-    distance: number,
-    blockingColor: Color,
-  ): Coordinate | null {
-    const squareOnDistance = this.getSquareByDistanceFromCurrent(
-      fromCoordinate,
-      distance,
-      blockingColor,
+    const squares = fieldColumns.map((col, x) =>
+      col.map(
+        (square, y) => new Square(Coordinate.fromXY(x, y), makeFigure(square)),
+      ),
     );
 
-    if (!squareOnDistance) {
-      throw new FieldException('no such square!');
-    }
-
-    if (
-      this.hasFiguresOnWay({
-        from: fromCoordinate,
-        to: squareOnDistance.coordinate,
-        direction: blockingColor,
-      })
-    ) {
-      return null;
-    }
-    return squareOnDistance.coordinate;
+    return new Field(squares);
   }
 
-  distance(from: Coordinate, to: Coordinate) {
-    const fromSideToCenter = () => from.y + to.y + 1;
-    const fromCenterToSide = () =>
-      this.middleRowLength - from.y + (this.sideRowLength - to.y) - 1;
-    const onOneLine = () => Math.abs(to.y - from.y);
-
-    if (to.x === from.x) {
-      return onOneLine();
-    } else if (from.x === 1) {
-      return fromCenterToSide();
-    } else {
-      return fromSideToCenter();
-    }
-  }
-
-  getSquareByDistanceFromCurrent(
-    currentSquareCoordinates: Coordinate,
-    distance: number,
-    direction: number,
-  ): Square | undefined {
-    for (const nextSquare of this.iterateFromToExcludeFirst(
-      direction,
-      currentSquareCoordinates,
-      currentSquareCoordinates,
-    )) {
-      if (
-        this.distance(currentSquareCoordinates, nextSquare.coordinate) ===
-        distance
-      )
-        return nextSquare;
-    }
-  }
-
-  onlyOneFigureOfColor(color: Color): boolean {
-    const figuresCounter = this.figures.filter(
-      (figure) => figure.color === color,
-    ).length;
-    return figuresCounter <= 1;
-  }
-
-  hasFiguresOnWay({
-    from,
-    to,
-    direction,
-  }: {
-    from: Coordinate;
-    to: Coordinate;
-    direction: number;
-  }) {
-    for (const square of this.iterateFromToExcludeFirst(direction, from, to)) {
-      if (square.figure?.color === direction) return true;
-    }
-    return false;
-  }
-
-  getAllFiguresCanActivate(color: Color): FieldFigure[] {
-    return this.figures.filter(
-      (figure) => figure.color === color && !figure.active,
-    );
-  }
-
-  anyActiveFigure(color: Color): boolean {
-    return this.anyFigureSuitsCondition(
-      color,
-      (clr, figure) => !!figure && figure.active && figure.color === clr,
-    );
-  }
-
-  anyNotActiveFigure(color: Color): boolean {
-    return this.anyFigureSuitsCondition(
-      color,
-      (clr, figure) => !!figure && !figure.active && figure.color === clr,
-    );
-  }
-
-  private anyFigureSuitsCondition(
-    color: Color,
-    condition: (x: Color, y: Figure | null) => boolean,
-  ) {
-    for (const square of this.iterate()) {
-      if (condition(color, square.figure)) return true;
-    }
-    return false;
+  makeSnapshot(): FieldSnapshot {
+    const snapshot = new FieldSnapshot(NotationConverter.toNotation(this));
+    return snapshot;
   }
 
   *iterate(direction = 1) {
@@ -263,40 +113,181 @@ export class Field {
     );
   }
 
-  makeSnapshot(): FieldSnapshot {
-    const snapshot = new FieldSnapshot(NotationConverter.toNotation(this));
-    return snapshot;
-  }
-
-  // dirty hack
-  private addCoordinate(figure: Figure, coordinate: Coordinate): FieldFigure {
-    return Object.setPrototypeOf(
-      { ...figure, coordinate },
-      Object.getPrototypeOf(figure),
-    );
-  }
-
-  restore(snapshot: string): Field {
-    const fieldColumns: string[][] = snapshot
-      .split('\n')
-      .map((c) => c.split(''));
-
-    const makeFigure = (char: string) => NotationConverter.charToFigure(char);
-
-    const squares = fieldColumns.map((col, x) =>
-      col.map(
-        (square, y) => new Square(Coordinate.fromXY(x, y), makeFigure(square)),
-      ),
-    );
-
-    return Field.initial(3);
-  }
-
   equals(otherField: Field) {
     return this.makeSnapshot() === otherField.makeSnapshot();
   }
 
-  clone() {
-    return new Field(this.makeSnapshot());
+  activate(figureCoordinate: Coordinate, currentColor: Color): Field {
+    const figure = this.pickFigure(figureCoordinate)?.figure;
+
+    if (figure?.canActivatedBy(currentColor)) {
+      return this.replaceFigure(figureCoordinate, figure.withActivated(true));
+    }
+    return this;
+  }
+
+  moveFigure(from: Coordinate, to: Coordinate): Field {
+    const fromSquare = this.findSquare(from);
+    const toSquare = this.findSquare(to);
+
+    if (!fromSquare || !toSquare) throw new FieldException('Неправильный ход!');
+
+    const fromFigure = this.pickFigure(from)?.figure ?? null;
+
+    return this.replaceFigure(from, null).replaceFigure(to, fromFigure);
+  }
+
+  pickFigure(coordinate: Coordinate): Square | null {
+    const square = this.squares?.at(coordinate.x)?.at(coordinate.y);
+    if (square?.figure) {
+      return square;
+    } else {
+      return null;
+    }
+  }
+
+  findSquare(coordinate: Coordinate): Square {
+    return this.squares[coordinate.x][coordinate.y];
+  }
+
+  getAnyFigureOfColorCanMoveOn(distance: number, color: Color): Square | null {
+    return this.getAllFiguresOfColorCanMoveOn(distance, color).at(-1) ?? null;
+  }
+
+  getAllFiguresOfColorCanMoveOn(distance: number, color: Color): Square[] {
+    return this.squaresWithFigures.filter((square) => {
+      let squareToMove;
+      if (square.figure?.color === color && square.figure?.active) {
+        squareToMove = this.getNotBlockedSquareCoordinateByDistanceFrom(
+          square.coordinate,
+          distance,
+          color,
+        );
+      }
+      return !!squareToMove;
+    });
+  }
+
+  getNotBlockedSquareCoordinateByDistanceFrom(
+    fromCoordinate: Coordinate,
+    distance: number,
+    blockingColor: Color,
+  ): Coordinate | null {
+    const squareOnDistance = this.getSquareByDistanceFromCurrent(
+      fromCoordinate,
+      distance,
+      blockingColor,
+    );
+
+    if (!squareOnDistance) {
+      throw new FieldException('no such square!');
+    }
+
+    if (
+      this.hasFiguresOnWay({
+        from: fromCoordinate,
+        to: squareOnDistance.coordinate,
+        direction: blockingColor,
+      })
+    ) {
+      return null;
+    }
+    return squareOnDistance.coordinate;
+  }
+
+  distance(from: Coordinate, to: Coordinate): number {
+    const fromSideToCenter = () => from.y + to.y + 1;
+    const fromCenterToSide = () =>
+      this.middleRowLength - from.y + (this.sideRowLength - to.y) - 1;
+    const onOneLine = () => Math.abs(to.y - from.y);
+
+    if (to.x === from.x) {
+      return onOneLine();
+    } else if (from.x === 1) {
+      return fromCenterToSide();
+    } else {
+      return fromSideToCenter();
+    }
+  }
+
+  getSquareByDistanceFromCurrent(
+    currentSquareCoordinates: Coordinate,
+    distance: number,
+    direction: number,
+  ): Square | undefined {
+    for (const nextSquare of this.iterateFromToExcludeFirst(
+      direction,
+      currentSquareCoordinates,
+      currentSquareCoordinates,
+    )) {
+      if (
+        this.distance(currentSquareCoordinates, nextSquare.coordinate) ===
+        distance
+      )
+        return nextSquare;
+    }
+  }
+
+  onlyOneFigureOfColor(color: Color): boolean {
+    const figuresCounter = this.squaresWithFigures.filter(
+      (square) => square.figure?.color === color,
+    ).length;
+    return figuresCounter <= 1;
+  }
+
+  hasFiguresOnWay({
+    from,
+    to,
+    direction,
+  }: {
+    from: Coordinate;
+    to: Coordinate;
+    direction: number;
+  }) {
+    for (const square of this.iterateFromToExcludeFirst(direction, from, to)) {
+      if (square.figure?.color === direction) return true;
+    }
+    return false;
+  }
+
+  getAllFiguresCanActivate(color: Color): Square[] {
+    return this.squaresWithFigures.filter(
+      (square) => square.figure?.color === color && !square.figure?.active,
+    );
+  }
+
+  anyActiveFigure(color: Color): boolean {
+    return this.anyFigureSuitsCondition(
+      color,
+      (clr, figure) => !!figure && figure.active && figure.color === clr,
+    );
+  }
+
+  anyNotActiveFigure(color: Color): boolean {
+    return this.anyFigureSuitsCondition(
+      color,
+      (clr, figure) => !!figure && !figure.active && figure.color === clr,
+    );
+  }
+
+  private anyFigureSuitsCondition(
+    color: Color,
+    condition: (x: Color, y: Figure | null) => boolean,
+  ) {
+    for (const square of this.iterate()) {
+      if (condition(color, square.figure)) return true;
+    }
+    return false;
+  }
+
+  replaceFigure(coord: Coordinate, figure: Figure | null): Field {
+    const replaceInCol = (col: Square[]) =>
+      col.map((square, y) =>
+        y === coord.y ? square.withFigure(figure) : square,
+      );
+
+    return new Field(
+      this.squares.map((col, x) => (x === coord.x ? replaceInCol(col) : col)),
+    );
   }
 }

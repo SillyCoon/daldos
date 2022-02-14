@@ -18,6 +18,7 @@
     "experimentalDecorators": true,
     "strictFunctionTypes": true,
     "downlevelIteration": true
+    // "typeAcquisition": { "include": ["jest"] }
   },
   "include": ["src"]
 }

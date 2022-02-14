@@ -4,7 +4,7 @@ import { Command, MoveCommand, RollCommand, ActivateCommand } from './command';
 import { Coordinate } from './coordinate';
 import { GameStatusEnum } from './enums/game-status';
 import { FieldException } from './exceptions/field-exception';
-import { NewField } from '../logic/new-field';
+import { Field } from '../logic/field';
 import { Square } from './square';
 
 type PlayerOptions = {
@@ -14,7 +14,7 @@ type PlayerOptions = {
 };
 
 export class GameState {
-  field: NewField;
+  field: Field;
   dices: number[];
   currentPlayerColor: Color;
   selectedFigure: Square | null;
@@ -22,7 +22,7 @@ export class GameState {
   color: Color = 1;
 
   constructor(
-    field: NewField,
+    field: Field,
     { dices, color, selectedFigure }: PlayerOptions,
     status: GameStatusEnum,
   ) {
@@ -34,7 +34,7 @@ export class GameState {
   }
 
   static start(fieldSize: number): GameState {
-    const field = NewField.initial(fieldSize);
+    const field = Field.initial(fieldSize);
     const playerOptions: PlayerOptions = {
       dices: [],
       color: 1,
