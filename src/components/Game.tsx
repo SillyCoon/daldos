@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { CommandTypeEnum } from '../game/models/game-elements/enums/command-type';
 import { Coordinate } from '../game/models/game-elements/coordinate';
 import { Statistic } from '../game/models/game-elements/statistic';
-import { ReactOpponent } from './logic/reactOpponent';
+import { ReactOpponent } from './logic/opponent';
 import { isActivate, isMove, isRoll, OpponentCommand } from './model/command';
 
 const size = new Size();

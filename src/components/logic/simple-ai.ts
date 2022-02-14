@@ -6,9 +6,9 @@ import {
   isMove,
   isActivate,
 } from '../model/command';
-import { ReactOpponent } from './reactOpponent';
+import { ReactOpponent } from './opponent';
 
-export class ReactAI implements ReactOpponent {
+export class SimpleAI implements ReactOpponent {
   order = 2;
   name = 'ИИ';
 

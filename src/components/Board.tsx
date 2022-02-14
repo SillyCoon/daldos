@@ -5,7 +5,11 @@ import { ColorScheme } from '../game/models/draw/color-scheme';
 import { GameState } from '../game/logic/game-state';
 import { Statistic } from '../game/models/game-elements/statistic';
 import { Coordinate } from '../game/models/game-elements/coordinate';
-import { BoardEventType, MouseClickType, mouseToGame } from './model/clickType';
+import {
+  BoardEventType,
+  MouseClickType,
+  mouseToGame,
+} from './model/click-type';
 
 interface BoardProps {
   size: Size;

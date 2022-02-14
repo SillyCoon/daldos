@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { DaldozaProps, Game } from './components/Game';
-import { ReactAI } from './components/logic/reactAi';
+import { SimpleAI } from './components/logic/simple-ai';
 import { GameModeEnum } from './game/models/game-elements/enums/game-mode';
 
 const Navbar = styled.div`
@@ -14,7 +14,7 @@ function App() {
   const daldozaProps: DaldozaProps = {
     myName: 'player',
     mode: GameModeEnum.AI,
-    opponent: new ReactAI(),
+    opponent: new SimpleAI(),
   };
 
   return (

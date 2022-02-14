@@ -1,5 +1,5 @@
 import { Coordinate } from '../../game/models/game-elements/coordinate';
-import { BoardEventType } from './clickType';
+import { BoardEventType } from './click-type';
 
 export interface OpponentCommand {
   type: BoardEventType;

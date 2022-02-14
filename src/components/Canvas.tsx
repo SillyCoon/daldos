@@ -4,10 +4,10 @@ import { ColorScheme } from '../game/models/draw/color-scheme';
 import { Size } from '../game/models/draw/size';
 import { Coordinate } from '../game/models/game-elements/coordinate';
 import { Statistic } from '../game/models/game-elements/statistic';
-import { CanvasCoordinateTranslator } from './helpers/canvasCoordinateTranslator';
+import { CanvasCoordinateTranslator } from './helpers/canvas-coordinate-translator';
 import { ReactDrawer } from './helpers/react-drawer';
-import { CanvasClickEvent } from './model/canvasClickEvent';
-import { fromEventToType, MouseClickType } from './model/clickType';
+import { CanvasClickEvent } from './model/canvas-click-event';
+import { fromEventToType, MouseClickType } from './model/click-type';
 
 export interface CanvasProps {
   size: Size;
