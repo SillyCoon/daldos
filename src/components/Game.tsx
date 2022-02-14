@@ -4,7 +4,7 @@ import { GameModeEnum } from '../model/enums/game-mode';
 import styled from 'styled-components';
 import { GameState } from '../model/game-state';
 import { ReactOpponent } from '../logic/opponent';
-import { OpponentCommand, isRoll, isActivate, isMove } from '../model/command';
+import { Command, isRoll, isActivate, isMove } from '../model/command';
 import { Coordinate } from '../model/coordinate';
 import { Size } from '../model/draw/size';
 import { CommandTypeEnum } from '../model/enums/command-type';
@@ -48,7 +48,7 @@ export const Game = (props: DaldozaProps) => {
 
   useEffect(() => {
     if (!isMyMove) {
-      props.opponent.getCommandFor(gameState).then((c: OpponentCommand) => {
+      props.opponent.getCommandFor(gameState).then((c: Command) => {
         if (isRoll(c)) {
           handleRoll();
         }

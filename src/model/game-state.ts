@@ -1,14 +1,8 @@
 import { Field, FieldFigure } from '../logic/field';
 import { Dice } from '../logic/dice';
 import { Color } from './color';
-import {
-  OpponentCommand,
-  MoveCommand,
-  RollCommand,
-  ActivateCommand,
-} from './command';
+import { Command, MoveCommand, RollCommand, ActivateCommand } from './command';
 import { Coordinate } from './coordinate';
-import { CommandTypeEnum } from './enums/command-type';
 import { GameStatusEnum } from './enums/game-status';
 import { FieldException } from './exceptions/field-exception';
 
@@ -123,11 +117,11 @@ export class GameState {
     );
   }
 
-  getAllAvailableCommands(): OpponentCommand[] {
+  getAllAvailableCommands(): Command[] {
     const availableMoveCommands = () => {
-      const commands: OpponentCommand[] = [];
+      const commands: Command[] = [];
       this.distances.forEach((distance) => {
-        const movesForDistance: OpponentCommand[] = this.field
+        const movesForDistance: Command[] = this.field
           .getAllFiguresOfColorCanMoveOn(distance, this.currentPlayerColor)
           .map((figure) => {
             const to = this.field.getSquareByDistanceFromCurrent(
@@ -166,7 +160,7 @@ export class GameState {
     const rollCommand = availableRollCommands();
     if (rollCommand) return [rollCommand];
 
-    const commands: OpponentCommand[] = [];
+    const commands: Command[] = [];
     commands.push(...availableActivateCommands());
     commands.push(...availableMoveCommands());
 

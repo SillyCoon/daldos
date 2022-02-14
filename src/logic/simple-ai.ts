@@ -1,6 +1,6 @@
 import {
   MoveCommand,
-  OpponentCommand,
+  Command,
   ActivateCommand,
   isMove,
   isActivate,
@@ -13,7 +13,7 @@ export class SimpleAI implements ReactOpponent {
   order = 2;
   name = 'ИИ';
 
-  send(_: OpponentCommand | null): Promise<void> {
+  send(_: Command | null): Promise<void> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
@@ -21,7 +21,7 @@ export class SimpleAI implements ReactOpponent {
     });
   }
 
-  getCommandFor(state: GameState): Promise<OpponentCommand> {
+  getCommandFor(state: GameState): Promise<Command> {
     const command = this.notSuchRandomCommand(state);
     return new Promise((resolve, _) => {
       setTimeout(() => {
@@ -33,13 +33,13 @@ export class SimpleAI implements ReactOpponent {
   /**
    * @deprecated use notSuchRandomCommand instead
    */
-  private randomCommand(gameState: GameState): OpponentCommand {
-    const commands: OpponentCommand[] = gameState.getAllAvailableCommands();
+  private randomCommand(gameState: GameState): Command {
+    const commands: Command[] = gameState.getAllAvailableCommands();
     return this.shuffle(commands)[0];
   }
 
-  private notSuchRandomCommand(gameState: GameState): OpponentCommand {
-    const commands: OpponentCommand[] = gameState.getAllAvailableCommands();
+  private notSuchRandomCommand(gameState: GameState): Command {
+    const commands: Command[] = gameState.getAllAvailableCommands();
 
     const eat = CommandsHelper.getMoveCommandWithEating(commands);
     const commandThenEat = CommandsHelper.getCommandAfterWhichCanEat(
@@ -78,21 +78,21 @@ export class SimpleAI implements ReactOpponent {
 
 class CommandsHelper {
   static getActivationCommandWithSmallestCoordinate(
-    commands: OpponentCommand[],
+    commands: Command[],
   ): ActivateCommand {
     return this.filterActivateCommands(commands).sort(
       (a, b) => a.coordinate.y - b.coordinate.y,
     )[0];
   }
 
-  static getMoveCommandWithEating(commands: OpponentCommand[]): MoveCommand {
+  static getMoveCommandWithEating(commands: Command[]): MoveCommand {
     return this.filterMoveCommands(commands).filter(
       (move) => move.hasFigureToEat,
     )[0];
   }
 
   static getCommandAfterWhichCanEat(
-    commands: OpponentCommand[],
+    commands: Command[],
     currentState: GameState,
   ): ActivateCommand | MoveCommand {
     const activation = this.getActivationAfterWhichCanEat(
@@ -104,7 +104,7 @@ class CommandsHelper {
   }
 
   static getActivationAfterWhichCanEat(
-    commands: OpponentCommand[],
+    commands: Command[],
     currentState: GameState,
   ): ActivateCommand {
     const stateManipulator = new StateManipulator(currentState);
@@ -121,7 +121,7 @@ class CommandsHelper {
   }
 
   static getMoveAfterWhichCanEat(
-    commands: OpponentCommand[],
+    commands: Command[],
     currentState: GameState,
   ): MoveCommand {
     const stateManipulator = new StateManipulator(currentState);
@@ -136,14 +136,12 @@ class CommandsHelper {
     })[0];
   }
 
-  private static filterMoveCommands(
-    commands: OpponentCommand[],
-  ): MoveCommand[] {
+  private static filterMoveCommands(commands: Command[]): MoveCommand[] {
     return commands.filter(isMove);
   }
 
   private static filterActivateCommands(
-    commands: OpponentCommand[],
+    commands: Command[],
   ): ActivateCommand[] {
     return commands.filter(isActivate);
   }

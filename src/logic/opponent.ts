@@ -1,9 +1,9 @@
-import { OpponentCommand } from '../model/command';
+import { Command } from '../model/command';
 import { GameState } from '../model/game-state';
 
 export interface ReactOpponent {
   name: string;
   order: number;
-  getCommandFor(state: GameState): Promise<OpponentCommand>;
-  send(command: OpponentCommand | null): Promise<void>;
+  getCommandFor(state: GameState): Promise<Command>;
+  send(command: Command | null): Promise<void>;
 }
