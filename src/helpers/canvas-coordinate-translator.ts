@@ -1,11 +1,12 @@
 import { CoordinateTranslator } from './coordinate-translator';
 import { CanvasClickEvent } from '../model/draw/canvas-click-event';
 import { Coordinate } from '../model/coordinate';
+import { Size } from '../model/draw/size';
 
 export namespace CanvasCoordinateTranslator {
   export const canvasClickToBoardCoordinate = (
     event: CanvasClickEvent,
-    fieldSize: number,
+    size: Size,
     canvasSize: DOMRect,
   ) => {
     const getMousePosition = (event: CanvasClickEvent): Coordinate => {
@@ -20,7 +21,7 @@ export namespace CanvasCoordinateTranslator {
         x >= 0 &&
         x < 3 &&
         y >= 0 &&
-        (y < fieldSize || (x === 1 && y < fieldSize + 1));
+        (y < size.fieldSize || (x === 1 && y < size.fieldSize + 1));
       return isValid;
     };
 
@@ -28,6 +29,7 @@ export namespace CanvasCoordinateTranslator {
     const translatedCoordinates =
       CoordinateTranslator.translateMousePositionToGameCoordinates(
         mousePosition,
+        size,
       );
     if (isValidCoordinate(translatedCoordinates)) {
       return translatedCoordinates;

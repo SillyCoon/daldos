@@ -4,8 +4,8 @@ import { Size } from '../model/draw/size';
 export class CoordinateTranslator {
   static translateMousePositionToGameCoordinates(
     mousePosition: Coordinate,
+    size: Size,
   ): Coordinate {
-    const size = new Size(); // TODO: изменить!!!
     const x = translate(mousePosition.x);
     const y = translate(mousePosition.y);
     return Coordinate.fromXY(x, y);
@@ -17,8 +17,8 @@ export class CoordinateTranslator {
 
   static translateGameCoordinatesToSquareCoordinate(
     gameCoordinate: Coordinate,
+    size: Size,
   ): Coordinate {
-    const size = new Size();
     const x = translate(gameCoordinate.x);
     const y = translate(gameCoordinate.y);
     return Coordinate.fromXY(x, y);

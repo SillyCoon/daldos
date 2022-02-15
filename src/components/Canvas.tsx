@@ -50,11 +50,7 @@ export const Canvas = ({
   const handleCanvasClick = (e: CanvasClickEvent) => {
     if (rect) {
       const clickCoord =
-        CanvasCoordinateTranslator.canvasClickToBoardCoordinate(
-          e,
-          size.fieldSize,
-          rect,
-        );
+        CanvasCoordinateTranslator.canvasClickToBoardCoordinate(e, size, rect);
       if (clickCoord) {
         onClick(clickCoord, fromEventToType(e.button));
       } else {
@@ -66,11 +62,7 @@ export const Canvas = ({
   const handleCanvasDoubleClick = (e: CanvasClickEvent) => {
     if (rect) {
       const clickCoord =
-        CanvasCoordinateTranslator.canvasClickToBoardCoordinate(
-          e,
-          size.fieldSize,
-          rect,
-        );
+        CanvasCoordinateTranslator.canvasClickToBoardCoordinate(e, size, rect);
       if (clickCoord) {
         onClick(clickCoord, MouseClickType.Double);
       }
