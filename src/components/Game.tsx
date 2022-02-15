@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './game.css';
-import { GameModeEnum } from '../model/enums/game-mode';
+import { GameMode } from '../model/enums/game-mode';
 import styled from 'styled-components';
 import { GameState } from '../model/game-state';
 import { ReactOpponent } from '../logic/opponent';
@@ -30,8 +30,8 @@ const timeout1000 = () =>
 
 export interface DaldozaProps {
   myName: string;
-  mode: GameModeEnum;
-  opponent: ReactOpponent;
+  mode: GameMode;
+  opponent?: ReactOpponent;
 }
 
 const myColor = 1;
@@ -44,7 +44,9 @@ export const Game = (props: DaldozaProps) => {
 
   const playerStatistics: Statistic = {
     name:
-      gameState.currentPlayerColor === 1 ? props.myName : props.opponent.name,
+      gameState.currentPlayerColor === 1
+        ? props.myName
+        : props.opponent?.name ?? 'Игрок 2',
     win: false,
   };
 
@@ -99,38 +101,41 @@ export const Game = (props: DaldozaProps) => {
   };
 
   useEffect(() => {
-    const handleOpponentCommand = (command: Command): void => {
-      if (isRoll(command)) {
-        handleRoll();
-      }
-      if (isActivate(command)) {
-        handleActivateFigure(command.coordinate);
-      }
-      if (isMove(command)) {
-        handleMoveFigure(command.to, command.from);
-      }
-    };
+    if (props.mode !== GameMode.Single) {
+      const handleOpponentCommand = (command: Command): void => {
+        if (isRoll(command)) {
+          handleRoll();
+        }
+        if (isActivate(command)) {
+          handleActivateFigure(command.coordinate);
+        }
+        if (isMove(command)) {
+          handleMoveFigure(command.to, command.from);
+        }
+      };
 
-    if (!isMyMove) {
-      props.opponent.getCommandFor(gameState).then(handleOpponentCommand);
+      if (!isMyMove) {
+        props.opponent?.getCommandFor(gameState).then(handleOpponentCommand);
+      }
     }
   }, [isMyMove, gameState]);
+
+  const controlsDisabled =
+    (!isMyMove && props.mode !== GameMode.Single) || !!gameState.dices.length;
+  const boardDisabled = !isMyMove && props.mode !== GameMode.Single;
 
   return (
     <GameWrapper>
       <Board
         size={size}
-        disabled={!isMyMove}
+        disabled={boardDisabled}
         statistic={playerStatistics}
         gameState={gameState}
         onPickFigure={handlePickFigure}
         onMoveFigure={handleMoveFigure}
         onActivateFigure={handleActivateFigure}
       ></Board>
-      <Controls
-        onRoll={handleRoll}
-        disabled={!isMyMove || !!gameState.dices.length}
-      ></Controls>
+      <Controls onRoll={handleRoll} disabled={controlsDisabled}></Controls>
       <Logger events={events}></Logger>
     </GameWrapper>
   );

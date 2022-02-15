@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { DaldozaProps, Game } from './components/Game';
+import { Game } from './components/Game';
+import { GameTypeSelector } from './components/GameTypeSelector';
 import { SimpleAI } from './logic/simple-ai';
-import { GameModeEnum } from './model/enums/game-mode';
+import { GameMode } from './model/enums/game-mode';
 
 const Navbar = styled.div`
   width: 100%;
@@ -11,22 +13,33 @@ const Navbar = styled.div`
 `;
 
 function App() {
-  const daldozaProps: DaldozaProps = {
-    myName: 'player',
-    mode: GameModeEnum.AI,
-    opponent: new SimpleAI(),
+  const [gameMode, setGameMode] = useState<GameMode | null>(null);
+
+  const handleAIClick = () => {
+    setGameMode(GameMode.AI);
   };
 
-  return (
-    <div className="App">
-      {/* <Navbar></Navbar> */}
+  const handleSingleClick = () => {
+    setGameMode(GameMode.Single);
+  };
+
+  const needOpponent = gameMode !== GameMode.Single;
+
+  const renderGame = () =>
+    gameMode ? (
       <Game
-        myName={daldozaProps.myName}
-        mode={daldozaProps.mode}
-        opponent={daldozaProps.opponent}
+        myName={'player'}
+        mode={gameMode}
+        opponent={needOpponent ? new SimpleAI() : undefined}
       ></Game>
-    </div>
-  );
+    ) : (
+      <GameTypeSelector
+        onAIClick={handleAIClick}
+        onSingleClick={handleSingleClick}
+      ></GameTypeSelector>
+    );
+
+  return <div className="App">{renderGame()}</div>;
 }
 
 export default App;

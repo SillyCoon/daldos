@@ -1,5 +1,5 @@
-export const enum GameModeEnum {
-  AI,
-  Single,
-  Multi,
+export const enum GameMode {
+  AI = 1,
+  Single = 2,
+  Multi = 3,
 }
