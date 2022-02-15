@@ -1,27 +1,27 @@
-import { BoardEventType } from './click-type';
+import { GameEvent } from './click-type';
 import { Coordinate } from './coordinate';
 
 export interface Command {
-  type: BoardEventType;
+  type: GameEvent;
 }
 
 export class RollCommand implements Command {
-  type = BoardEventType.Roll;
+  type = GameEvent.Roll;
 }
 
 export class PickCommand implements Command {
-  type = BoardEventType.Pick;
+  type = GameEvent.Pick;
   constructor(public coordinate: Coordinate) {}
 }
 
 export class ActivateCommand implements Command {
-  type = BoardEventType.Activate;
+  type = GameEvent.Activate;
 
   constructor(public coordinate: Coordinate) {}
 }
 
 export class MoveCommand implements Command {
-  type = BoardEventType.Move;
+  type = GameEvent.Move;
   constructor(
     public from: Coordinate,
     public to: Coordinate,
@@ -30,10 +30,10 @@ export class MoveCommand implements Command {
 }
 
 export const isActivate = (c: Command): c is ActivateCommand =>
-  c.type === BoardEventType.Activate;
+  c.type === GameEvent.Activate;
 
 export const isMove = (c: Command): c is MoveCommand =>
-  c.type === BoardEventType.Move;
+  c.type === GameEvent.Move;
 
 export const isRoll = (c: Command): c is RollCommand =>
-  c.type === BoardEventType.Roll;
+  c.type === GameEvent.Roll;

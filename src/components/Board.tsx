@@ -1,10 +1,6 @@
 import styled, { css } from 'styled-components';
 import { GameState } from '../model/game-state';
-import {
-  MouseClickType,
-  mouseToGame,
-  BoardEventType,
-} from '../model/click-type';
+import { MouseClickType, mouseToGame, GameEvent } from '../model/click-type';
 import { Coordinate } from '../model/coordinate';
 import { ColorScheme } from '../model/draw/color-scheme';
 import { Size } from '../model/draw/size';
@@ -47,17 +43,14 @@ export const Board = ({
     if (!disabled) {
       const actionType = mouseToGame(clickType);
 
-      if (actionType === BoardEventType.Pick && canPick(boardCoordinate)) {
+      if (actionType === GameEvent.Pick && canPick(boardCoordinate)) {
         console.log('pick: ', boardCoordinate);
         onPickFigure(boardCoordinate);
-      } else if (
-        actionType === BoardEventType.Move &&
-        canMove(boardCoordinate)
-      ) {
+      } else if (actionType === GameEvent.Move && canMove(boardCoordinate)) {
         console.log('move: ', boardCoordinate);
         onMoveFigure(boardCoordinate);
       } else if (
-        actionType === BoardEventType.Activate &&
+        actionType === GameEvent.Activate &&
         canActivate(boardCoordinate)
       ) {
         onActivateFigure(boardCoordinate);

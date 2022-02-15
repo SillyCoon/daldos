@@ -1,4 +1,4 @@
-import { CoordinateTranslator } from '../logic/coordinate-translator';
+import { CoordinateTranslator } from './coordinate-translator';
 import { CanvasClickEvent } from '../model/draw/canvas-click-event';
 import { Coordinate } from '../model/coordinate';
 
