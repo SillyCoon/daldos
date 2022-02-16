@@ -19,7 +19,10 @@ export class MultiplayerOpponent implements Opponent {
   name: string = '123';
   order: number = 2;
 
-  constructor(private service: OpponentService) {}
+  constructor(private service: OpponentService) {
+    const opponent = service.getOpponent();
+    opponent.then((o) => console.log(o));
+  }
 
   getCommandFor(state: GameState): Promise<Command> {
     throw new Error('Method not implemented.');
