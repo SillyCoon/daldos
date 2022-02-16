@@ -1,9 +1,9 @@
 import { useFormik } from 'formik';
 import { GameMode } from '../model/enums/game-mode';
-import { Player } from '../model/player';
+import { PlayerDto } from '../model/player';
 
 export interface GameTypeSelectorProps {
-  onWelcomeScreenSubmit: (name: Player, mode: GameMode) => void;
+  onWelcomeScreenSubmit: (name: PlayerDto, mode: GameMode) => void;
 }
 
 export const WelcomeScreen = ({

@@ -1,55 +1,31 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Game } from './components/Game';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { SimpleAI } from './logic/simple-ai';
 import { GameMode } from './model/enums/game-mode';
-import { io } from 'socket.io-client';
-import { Player } from './model/player';
+import { PlayerDto } from './model/player';
+import { PlayerService } from './service/player.service';
 
-const Navbar = styled.div`
-  width: 100%;
-  height: 50px;
-  background-color: red;
-  margin-bottom: 10px;
-`;
+type GameSettings = { mode: GameMode } & { player: PlayerDto };
 
-const ws = io('http://localhost:3000');
+const App = () => {
+  const [gameSettings, setGameSettings] = useState<GameSettings | null>(null);
 
-function App() {
-  const [gameMode, setGameMode] = useState<GameMode | null>(null);
-  const [player, setPlayer] = useState<Player | null>(null);
-
-  const handleWelcomeScreenSubmit = (player: Player, mode: GameMode) => {
-    setGameMode(mode);
-    setPlayer(player);
+  const handleWelcomeScreenSubmit = (player: PlayerDto, mode: GameMode) => {
+    setGameSettings({ mode, player });
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/players', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(player),
-    }).then((r) => r.json().then((t) => console.log(t)));
+    if (gameSettings?.player) PlayerService.registerPlayer(gameSettings.player);
   });
 
-  const needOpponent = gameMode !== GameMode.Single;
-
-  // useEffect(() => {
-  //   ws.on('connect', () => {
-  //     console.log('connected');
-  //     ws.send(JSON.stringify({ type: 'events', msg: 'string' }));
-  //   });
-  // });
+  const needOpponent = !!(gameSettings?.mode !== GameMode.Single);
 
   const renderGame = () =>
-    gameMode ? (
+    gameSettings ? (
       <Game
-        myName={'player'}
-        mode={gameMode}
+        myName={gameSettings?.player?.name ?? 'Игрок 1'}
+        mode={gameSettings?.mode ?? GameMode.Single}
         opponent={needOpponent ? new SimpleAI() : undefined}
       ></Game>
     ) : (
@@ -59,6 +35,6 @@ function App() {
     );
 
   return <div className="App">{renderGame()}</div>;
-}
+};
 
 export default App;
