@@ -12,6 +12,7 @@
 
 import { Command } from '../../model/command';
 import { GameState } from '../../model/game-state';
+import { Player } from '../../model/player';
 import { OpponentService } from '../../service/opponent.service';
 import { Opponent } from './opponent';
 
@@ -19,10 +20,7 @@ export class MultiplayerOpponent implements Opponent {
   name: string = '123';
   order: number = 2;
 
-  constructor(private service: OpponentService) {
-    const opponent = service.getOpponent();
-    opponent.then((o) => console.log(o));
-  }
+  constructor(private service: OpponentService, player: Player) {}
 
   getCommandFor(state: GameState): Promise<Command> {
     throw new Error('Method not implemented.');
@@ -34,11 +32,6 @@ export class MultiplayerOpponent implements Opponent {
 
   disconnect() {
     this.disconnect();
-  }
-
-  static create(): MultiplayerOpponent {
-    const service = new OpponentService();
-    return new MultiplayerOpponent(service);
   }
 }
 

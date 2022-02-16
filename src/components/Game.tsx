@@ -68,7 +68,6 @@ export const Game = (props: DaldozaProps) => {
 
   const handlePickFigure = (coordinate: Coordinate) => {
     log(gameState.currentPlayerColor, `выбрал фигуру ${coordinate.toString()}`);
-
     setGameState(executor.pickFigure(coordinate));
   };
 
