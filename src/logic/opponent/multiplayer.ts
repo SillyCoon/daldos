@@ -10,7 +10,34 @@
 // import { App } from '../app';
 // import { Observable } from 'rxjs';
 
-export const MultiplayerMock = {};
+import { Command } from '../../model/command';
+import { GameState } from '../../model/game-state';
+import { OpponentService } from '../../service/opponent.service';
+import { Opponent } from './opponent';
+
+export class MultiplayerOpponent implements Opponent {
+  name: string = '123';
+  order: number = 2;
+
+  constructor(private service: OpponentService) {}
+
+  getCommandFor(state: GameState): Promise<Command> {
+    throw new Error('Method not implemented.');
+  }
+
+  send(command: Command | null): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  disconnect() {
+    this.disconnect();
+  }
+
+  static create(): MultiplayerOpponent {
+    const service = new OpponentService();
+    return new MultiplayerOpponent(service);
+  }
+}
 
 // interface SocketCommand {
 //   commandType: CommandTypeEnum;

@@ -31,7 +31,7 @@ const timeout1000 = () =>
 export interface DaldozaProps {
   myName: string;
   mode: GameMode;
-  opponent?: Opponent;
+  opponent: Opponent | null;
 }
 
 const myColor = 1;
