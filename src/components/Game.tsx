@@ -13,6 +13,7 @@ import { Controls } from './Controls';
 import { Logger } from './Logger';
 import { CommandExecutor } from '../logic/state-manipulator';
 import { LogEvent } from '../model/log-event';
+import { useLog } from '../hooks/useLog';
 
 const size = new Size();
 
@@ -38,7 +39,7 @@ const myColor = 1;
 
 export const Game = (props: DaldozaProps) => {
   const [gameState, setGameState] = useState(GameState.start(size.fieldSize));
-  const [events, setEvents] = useState<LogEvent[]>([]);
+  const [events, log] = useLog();
 
   const executor = new CommandExecutor(gameState);
 
@@ -58,25 +59,16 @@ export const Game = (props: DaldozaProps) => {
     }
   });
 
-  const prependEvent = (event: LogEvent): void => {
-    setEvents([event, ...events]);
-  };
-
   const isMyMove = gameState.currentPlayerColor === myColor;
 
   const handleRoll = () => {
-    prependEvent({
-      player: gameState.currentPlayerColor,
-      message: 'кинул кубики',
-    });
+    log(gameState.currentPlayerColor, 'кинул кубики');
     setGameState(executor.roll());
   };
 
   const handlePickFigure = (coordinate: Coordinate) => {
-    prependEvent({
-      player: gameState.currentPlayerColor,
-      message: `выбрал фигуру ${coordinate.toString()}`,
-    });
+    log(gameState.currentPlayerColor, `выбрал фигуру ${coordinate.toString()}`);
+
     setGameState(executor.pickFigure(coordinate));
   };
 
@@ -84,19 +76,19 @@ export const Game = (props: DaldozaProps) => {
     const fromCoord = from ?? gameState.selectedFigure?.coordinate;
 
     if (fromCoord) {
-      prependEvent({
-        player: gameState.currentPlayerColor,
-        message: `сходил ${fromCoord.toString()} -> ${to.toString()}`,
-      });
+      log(
+        gameState.currentPlayerColor,
+        `сходил ${fromCoord.toString()} -> ${to.toString()}`,
+      );
       setGameState(executor.makeMove(fromCoord, to));
     }
   };
 
   const handleActivateFigure = (coordinate: Coordinate) => {
-    prependEvent({
-      player: gameState.currentPlayerColor,
-      message: `активировал фигуру ${coordinate.toString()}`,
-    });
+    log(
+      gameState.currentPlayerColor,
+      `активировал фигуру ${coordinate.toString()}`,
+    );
     setGameState(executor.activate(coordinate));
   };
 
