@@ -52,6 +52,15 @@ export const WelcomeScreen = ({
             onChange={formik.handleChange}
           ></input>
         </label>
+        <label>
+          Multiplayer
+          <input
+            type="radio"
+            name="mode"
+            value={GameMode.Multi}
+            onChange={formik.handleChange}
+          ></input>
+        </label>
       </div>
       <button type="submit" disabled={!(formik.isValid && formik.dirty)}>
         Play!

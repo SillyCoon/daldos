@@ -1,3 +1,9 @@
 import { io } from 'socket.io-client';
 
-export default io('http://localhost:3000');
+const connectWs = () => {
+  const ws = io('http://localhost:3000');
+  ws.on('connect', () => console.log('connected to MP'));
+  return ws;
+};
+
+export default connectWs;

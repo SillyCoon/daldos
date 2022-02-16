@@ -3,7 +3,7 @@ import './game.css';
 import { GameMode } from '../model/enums/game-mode';
 import styled from 'styled-components';
 import { GameState } from '../model/game-state';
-import { ReactOpponent } from '../logic/opponent';
+import { Opponent } from '../logic/opponent/opponent';
 import { Command, isRoll, isActivate, isMove } from '../model/command';
 import { Coordinate } from '../model/coordinate';
 import { Size } from '../model/draw/size';
@@ -31,7 +31,7 @@ const timeout1000 = () =>
 export interface DaldozaProps {
   myName: string;
   mode: GameMode;
-  opponent?: ReactOpponent;
+  opponent?: Opponent;
 }
 
 const myColor = 1;

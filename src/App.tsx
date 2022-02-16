@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Game } from './components/Game';
 import { WelcomeScreen } from './components/WelcomeScreen';
-import { SimpleAI } from './logic/simple-ai';
+import connectWs from './logic/communication/ws';
+import { SimpleAI } from './logic/opponent/simple-ai';
 import { GameMode } from './model/enums/game-mode';
 import { PlayerDto } from './model/player';
 import { PlayerService } from './service/player.service';
@@ -16,10 +17,15 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (gameSettings?.player) PlayerService.registerPlayer(gameSettings.player);
+    if (gameSettings?.player) {
+      PlayerService.registerPlayer(gameSettings.player);
+    }
+    if (gameSettings?.mode === GameMode.Multi) {
+      connectWs();
+    }
   });
 
-  const needOpponent = !!(gameSettings?.mode !== GameMode.Single);
+  const needOpponent = gameSettings?.mode !== GameMode.Single;
 
   const renderGame = () =>
     gameSettings ? (

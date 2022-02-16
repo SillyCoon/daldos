@@ -4,12 +4,12 @@ import {
   ActivateCommand,
   isMove,
   isActivate,
-} from '../model/command';
-import { GameState } from '../model/game-state';
-import { ReactOpponent } from './opponent';
-import { CommandExecutor } from './state-manipulator';
+} from '../../model/command';
+import { GameState } from '../../model/game-state';
+import { Opponent } from './opponent';
+import { CommandExecutor } from '../state-manipulator';
 
-export class SimpleAI implements ReactOpponent {
+export class SimpleAI implements Opponent {
   order = 2;
   name = 'ИИ';
 
