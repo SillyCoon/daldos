@@ -1,6 +1,8 @@
 import { useFormik } from 'formik';
 import { GameMode } from '../model/enums/game-mode';
 import { PlayerDto } from '../model/player';
+import { TextInput } from './TextInput';
+import { Title } from './Title';
 
 export interface GameTypeSelectorProps {
   onWelcomeScreenSubmit: (name: PlayerDto, mode: GameMode) => void;
@@ -22,49 +24,55 @@ export const WelcomeScreen = ({
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <label>
-        Your Name:
-        <input
-          id="name"
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          value={formik.values.name}
-        />
-      </label>
-      <h1>Select game type:</h1>
-      <div id="mode-selector">
+    <div>
+      <Title>Let's get started</Title>
+      <form onSubmit={formik.handleSubmit}>
         <label>
-          Single
-          <input
-            type="radio"
-            name="mode"
-            value={GameMode.Single}
-            onChange={formik.handleChange}
-          ></input>
+          <span className="mr-5">Your Name:</span>
+          <TextInput
+            name="name"
+            value={formik.values.name}
+            handleChange={formik.handleChange}
+          ></TextInput>
         </label>
-        <label>
-          AI
-          <input
-            type="radio"
-            name="mode"
-            value={GameMode.AI}
-            onChange={formik.handleChange}
-          ></input>
-        </label>
-        <label>
-          Multiplayer
-          <input
-            type="radio"
-            name="mode"
-            value={GameMode.Multi}
-            onChange={formik.handleChange}
-          ></input>
-        </label>
-      </div>
-      <button type="submit" disabled={!(formik.isValid && formik.dirty)}>
-        Play!
-      </button>
-    </form>
+        <Title>Select game type:</Title>
+        <div id="mode-selector">
+          <label>
+            Single
+            <input
+              type="radio"
+              name="mode"
+              value={GameMode.Single}
+              onChange={formik.handleChange}
+            ></input>
+          </label>
+          <label>
+            AI
+            <input
+              type="radio"
+              name="mode"
+              value={GameMode.AI}
+              onChange={formik.handleChange}
+            ></input>
+          </label>
+          <label>
+            Multiplayer
+            <input
+              type="radio"
+              name="mode"
+              value={GameMode.Multi}
+              onChange={formik.handleChange}
+            ></input>
+          </label>
+        </div>
+        <button
+          className="disabled:bg-blue-300 border-solid bg-blue-500 text-white border-1 px-2 py-1 rounded-md border-blue-700"
+          type="submit"
+          disabled={!(formik.isValid && formik.dirty)}
+        >
+          Play!
+        </button>
+      </form>
+    </div>
   );
 };
