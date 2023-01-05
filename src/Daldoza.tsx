@@ -11,7 +11,7 @@ import { PlayerService } from './service/player.service';
 
 type GameSettings = { mode: GameMode } & { player: PlayerDto };
 
-const App = () => {
+const Daldoza = () => {
   const [gameSettings, setGameSettings] = useState<GameSettings | null>(null);
   const [opponent, setOpponent] = useState<Opponent | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
@@ -20,12 +20,20 @@ const App = () => {
     setGameSettings({ mode, player });
   };
 
+  // useEffect(() => {
+  //   if (gameSettings?.player)
+  //     PlayerService.registerPlayer(gameSettings.player).then((player) => {
+  //       setCurrentPlayer(player);
+  //     });
+  // }, [gameSettings]);
+
   useEffect(() => {
-    if (gameSettings?.player)
-      PlayerService.registerPlayer(gameSettings.player).then((player) => {
-        setCurrentPlayer(player);
-      });
+    if (gameSettings?.player) {
+      setCurrentPlayer({ name: gameSettings.player.name, id: '1' });
+    }
   }, [gameSettings]);
+
+  // console.log(gameSettings, currentPlayer);
 
   useEffect(() => {
     if (gameSettings && currentPlayer) {
@@ -57,4 +65,4 @@ const App = () => {
   return <div className="App">{renderGame()}</div>;
 };
 
-export default App;
+export default Daldoza;
