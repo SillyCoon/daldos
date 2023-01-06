@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import './game.css';
 import { GameMode } from '../model/enums/game-mode';
-import styled from 'styled-components';
 import { GameState } from '../model/game-state';
 import { Opponent } from '../logic/opponent/opponent';
 import { Command, isRoll, isActivate, isMove } from '../model/command';
@@ -12,15 +11,9 @@ import { Board } from './Board';
 import { Controls } from './Controls';
 import { Logger } from './Logger';
 import { CommandExecutor } from '../logic/state-manipulator';
-import { LogEvent } from '../model/log-event';
 import { useLog } from '../hooks/useLog';
 
 const size = new Size();
-
-const GameWrapper = styled.div`
-  display: flex;
-  margin-left: 200px;
-`;
 
 const timeout1000 = () =>
   new Promise<void>((resolve, _) => {
@@ -116,7 +109,7 @@ export const Game = (props: DaldozaProps) => {
   const boardDisabled = !isMyMove && props.mode !== GameMode.Single;
 
   return (
-    <GameWrapper>
+    <div className="flex ml-48">
       <Board
         size={size}
         disabled={boardDisabled}
@@ -128,6 +121,6 @@ export const Game = (props: DaldozaProps) => {
       ></Board>
       <Controls onRoll={handleRoll} disabled={controlsDisabled}></Controls>
       <Logger events={events}></Logger>
-    </GameWrapper>
+    </div>
   );
 };

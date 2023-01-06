@@ -1,4 +1,3 @@
-import styled, { css } from 'styled-components';
 import { GameState } from '../model/game-state';
 import { MouseClickType, mouseToGame, GameEvent } from '../model/click-type';
 import { Coordinate } from '../model/coordinate';
@@ -16,14 +15,6 @@ interface BoardProps {
   onMoveFigure: (to: Coordinate) => void;
   onActivateFigure: (figureCoordinate: Coordinate) => void;
 }
-
-const BoardWrapper = styled.div`
-  ${(props: { disabled?: boolean }) =>
-    props.disabled &&
-    css`
-      disabled: true;
-    `}
-`;
 
 const colorScheme = new ColorScheme();
 
@@ -74,7 +65,7 @@ export const Board = ({
   };
 
   return (
-    <BoardWrapper disabled={disabled}>
+    <div className={disabled ? 'pointer-events-none' : ''}>
       <Canvas
         size={size}
         colorScheme={colorScheme}
@@ -82,6 +73,6 @@ export const Board = ({
         gameState={gameState}
         statistic={statistic}
       ></Canvas>
-    </BoardWrapper>
+    </div>
   );
 };
