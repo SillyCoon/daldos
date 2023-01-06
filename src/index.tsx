@@ -1,11 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import Daldoza from './Daldoza';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Daldoza />
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+const container = document.getElementById('root') as HTMLElement;
+const root = createRoot(container);
+root.render(<Daldoza />);
