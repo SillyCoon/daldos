@@ -1,15 +1,3 @@
-// import { RollCommand } from '../commands/roll-command';
-// import { MoveCommand } from '../commands/move-command';
-// import { ActivateCommand } from '../commands/activate-command';
-// import {
-//   CommandType,
-//   CommandTypeEnum,
-// } from '../../models/game-elements/enums/command-type';
-// import { OppositeRollCommand } from '../commands/opposite-roll-command';
-// import { Command } from '../commands/command';
-// import { App } from '../app';
-// import { Observable } from 'rxjs';
-
 import { Command } from '../../model/command';
 import { GameState } from '../../model/game-state';
 import { Player } from '../../model/player';
