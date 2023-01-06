@@ -14,8 +14,6 @@ interface GameEmitEventsMap extends EventsMap {
 export class OpponentService {
   private ws: Socket<GameListenEventsMap, GameEmitEventsMap> = connectWs();
 
-  constructor() {}
-
   register(playerId: string) {
     this.ws.auth = { playerId };
   }
