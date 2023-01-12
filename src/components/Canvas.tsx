@@ -77,6 +77,7 @@ export const Canvas = ({
       onContextMenu={(e) => {
         e.preventDefault();
       }}
+      onClick={(e) => (e.button === 3 ? e.preventDefault() : null)}
       onMouseUp={(e) => handleCanvasClick(e)}
       onDoubleClick={(e) => handleCanvasDoubleClick(e)}
     ></canvas>

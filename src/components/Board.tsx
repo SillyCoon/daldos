@@ -31,24 +31,24 @@ export const Board = ({
     boardCoordinate: Coordinate,
     clickType: MouseClickType,
   ) => {
-    if (!disabled) {
-      const actionType = mouseToGame(clickType);
+    if (disabled) return;
 
-      if (actionType === GameEvent.Pick && canPick(boardCoordinate)) {
-        console.log('pick: ', boardCoordinate);
-        onPickFigure(boardCoordinate);
-      } else if (actionType === GameEvent.Move && canMove(boardCoordinate)) {
-        console.log('move: ', boardCoordinate);
-        onMoveFigure(boardCoordinate);
-      } else if (
-        actionType === GameEvent.Activate &&
-        canActivate(boardCoordinate)
-      ) {
-        onActivateFigure(boardCoordinate);
-        console.log('activate: ', boardCoordinate);
-      } else {
-        console.log('no moves for this coordinate: ', boardCoordinate);
-      }
+    const actionType = mouseToGame(clickType);
+
+    if (actionType === GameEvent.Pick && canPick(boardCoordinate)) {
+      console.log('pick: ', boardCoordinate);
+      onPickFigure(boardCoordinate);
+    } else if (actionType === GameEvent.Move && canMove(boardCoordinate)) {
+      console.log('move: ', boardCoordinate);
+      onMoveFigure(boardCoordinate);
+    } else if (
+      actionType === GameEvent.Activate &&
+      canActivate(boardCoordinate)
+    ) {
+      onActivateFigure(boardCoordinate);
+      console.log('activate: ', boardCoordinate);
+    } else {
+      console.log('no moves for this coordinate: ', boardCoordinate);
     }
   };
 
