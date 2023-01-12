@@ -14,7 +14,9 @@ export const Logger = ({ events }: LoggerProps) => {
   return (
     <div>
       <h3>Лог:</h3>
-      {logs}
+      <div className="p-2 border-2 border-solid max-h-20 h-20 overflow-y-auto">
+        {logs}
+      </div>
     </div>
   );
 };

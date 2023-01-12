@@ -109,17 +109,19 @@ export const Game = (props: DaldozaProps) => {
   const boardDisabled = !isMyMove && props.mode !== GameMode.Single;
 
   return (
-    <div className="flex ml-48">
-      <Board
-        size={size}
-        disabled={boardDisabled}
-        statistic={playerStatistics}
-        gameState={gameState}
-        onPickFigure={handlePickFigure}
-        onMoveFigure={handleMoveFigure}
-        onActivateFigure={handleActivateFigure}
-      ></Board>
-      <Controls onRoll={handleRoll} disabled={controlsDisabled}></Controls>
+    <div className="flex flex-col ml-48">
+      <div className="flex">
+        <Board
+          size={size}
+          disabled={boardDisabled}
+          statistic={playerStatistics}
+          gameState={gameState}
+          onPickFigure={handlePickFigure}
+          onMoveFigure={handleMoveFigure}
+          onActivateFigure={handleActivateFigure}
+        ></Board>
+        <Controls onRoll={handleRoll} disabled={controlsDisabled}></Controls>
+      </div>
       <Logger events={events}></Logger>
     </div>
   );
