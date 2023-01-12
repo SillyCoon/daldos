@@ -12,4 +12,4 @@
    :asset-path "/js"
    :modules
    {:main
-    {:init-fn app/init}}}}}
+    {:init-fn daldoza.app/init}}}}}

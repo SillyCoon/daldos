@@ -1,7 +1,8 @@
 {:paths
  ["src/dev"
   "src/main"
-  "src/test"]
+  "src/test"
+  "src/js"]
 
  :aliases
  {:cljs

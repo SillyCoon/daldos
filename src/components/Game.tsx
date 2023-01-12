@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './game.css';
 import { GameMode } from '../model/enums/game-mode';
 import { GameState } from '../model/game-state';
 import { Opponent } from '../logic/opponent/opponent';

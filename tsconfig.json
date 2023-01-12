@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "outDir": "src/js/daldoza",
+    "rootDir": "./src",
+    "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -13,13 +15,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "strictFunctionTypes": true,
     "downlevelIteration": true
-    // "typeAcquisition": { "include": ["jest"] }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "tests", "/**/*.test*", "setupTests.ts"]
 }

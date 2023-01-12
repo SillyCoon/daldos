@@ -1,5 +1,6 @@
-(ns app
-  (:require [reagent.dom :as dom]))
+(ns daldoza.app
+  (:require [reagent.dom :as dom])
+  (:require ["/daldoza/model/square" :as kek]))
 
 (defn app
   []
