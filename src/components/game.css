@@ -1,4 +1,4 @@
-.game-container {
+/* .game-container {
   display: inline-flex;
   width: 100%;
 }
@@ -30,5 +30,5 @@
 
 .disabled-field {
   cursor: not-allowed;
-  pointer-events: none
-}
+  pointer-events: none;
+} */

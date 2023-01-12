@@ -62,7 +62,7 @@ const Daldoza = () => {
       ></WelcomeScreen>
     );
 
-  return <div className="App">{renderGame()}</div>;
+  return <div className="h-full">{renderGame()}</div>;
 };
 
 export default Daldoza;

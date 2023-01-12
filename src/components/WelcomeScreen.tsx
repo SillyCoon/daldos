@@ -26,41 +26,43 @@ export const WelcomeScreen = ({
   });
 
   return (
-    <div>
-      <Title>Let's get started</Title>
-      <form onSubmit={formik.handleSubmit}>
-        <TextInput
-          label="Your Name:"
-          name="name"
-          value={formik.values.name}
-          handleChange={formik.handleChange}
-        ></TextInput>
-        <div id="mode-selector" className="flex flex-col mb-5 mt-3">
-          <Title>Select game type:</Title>
-          <Radio
-            name="mode"
-            label="Single"
-            value={GameMode.Single}
-            onChange={formik.handleChange}
-          ></Radio>
-          <Radio
-            name="mode"
-            label="AI"
-            value={GameMode.AI}
-            onChange={formik.handleChange}
-          ></Radio>
-          {/* <Radio
+    <div className="flex h-full justify-center content-center flex-wrap">
+      <div>
+        <Title>Let's get started</Title>
+        <form onSubmit={formik.handleSubmit}>
+          <TextInput
+            label="Your Name:"
+            name="name"
+            value={formik.values.name}
+            handleChange={formik.handleChange}
+          ></TextInput>
+          <div id="mode-selector" className="flex flex-col mb-5 mt-3">
+            <Title>Select game type:</Title>
+            <Radio
+              name="mode"
+              label="Single"
+              value={GameMode.Single}
+              onChange={formik.handleChange}
+            ></Radio>
+            <Radio
+              name="mode"
+              label="AI"
+              value={GameMode.AI}
+              onChange={formik.handleChange}
+            ></Radio>
+            {/* <Radio
             name="mode"
             label="Multiplayer"
             value={GameMode.Multi}
             onChange={formik.handleChange}
           ></Radio> */}
-        </div>
-        <PrimaryButton
-          disabled={!(formik.isValid && formik.dirty)}
-          type="submit"
-        ></PrimaryButton>
-      </form>
+          </div>
+          <PrimaryButton
+            disabled={!(formik.isValid && formik.dirty)}
+            type="submit"
+          ></PrimaryButton>
+        </form>
+      </div>
     </div>
   );
 };
