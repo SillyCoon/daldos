@@ -1,5 +1,6 @@
 {:paths
  ["src/dev"
+  "src/assets"
   "src/main"
   "src/test"
   "src/js"]

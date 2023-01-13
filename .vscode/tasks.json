@@ -2,10 +2,8 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "typescript",
-      "tsconfig": "tsconfig.json",
-      "option": "watch",
-      "problemMatcher": ["$tsc-watch"],
+      "type": "npm",
+      "script": "esbuild:watch",
       "group": {
         "kind": "build",
         "isDefault": false
@@ -15,6 +13,19 @@
         "group": "defaultDaldoza"
       },
       "label": "Watch Typescript"
+    },
+    {
+      "type": "npm",
+      "script": "postcss:watch",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "panel": "dedicated",
+        "group": "defaultDaldoza"
+      },
+      "label": "Watch Tailwind"
     },
     {
       "type": "npm",
@@ -35,8 +46,8 @@
         "kind": "build",
         "isDefault": true
       },
-      "dependsOrder": "sequence",
-      "dependsOn": ["Watch Typescript", "Watch cljs"]
+      "dependsOrder": "parallel",
+      "dependsOn": ["Watch Typescript", "Watch Tailwind", "Watch cljs"]
     }
   ]
 }

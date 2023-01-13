@@ -1,6 +1,7 @@
 (ns daldoza.app
-  (:require [reagent.dom :as dom])
-  (:require ["/daldoza/model/square" :as kek]))
+  (:require ["/daldoza/daldoza" :as daldoza :refer (default)]
+            [reagent.core :as reagent]
+            [reagent.dom :as dom]))
 
 (defn app
   []
@@ -8,10 +9,8 @@
 
 ;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
-  (dom/render [app]
+  (dom/render [:> default]
               (.getElementById js/document "root")))
-
-(+ 1 1)
 
 (defn init []
   ;; init is called ONCE when the page loads

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -14,7 +15,9 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
+    "esbuild:watch": "esbuild ./src/Daldoza.tsx --bundle --watch --packages=external --format=esm --outfile=./src/js/daldoza/daldoza.js --loader:.png=file",
     "shadow:watch": "shadow-cljs watch app",
+    "postcss:watch": "cross-env TAILWIND_MODE=watch postcss src/css/tailwind.css -o ./build/static/css/main.css --verbose -w",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -39,17 +42,19 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "esbuild": "0.16.17",
     "@types/jest": "^27.4.0",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^18.0.10",
     "@types/uuid": "^9.0.0",
     "@types/websocket": "^1.0.5",
-    "tailwindcss": "^3.2.4",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3",
     "postcss": "^8.4.20",
     "postcss-cli": "^10.1.0",
-    "shadow-cljs": "^2.20.16"
+    "shadow-cljs": "^2.20.16",
+    "tailwindcss": "^3.2.4",
+    "cross-env": "^7.0.3"
   }
 }
